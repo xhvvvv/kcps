@@ -1,6 +1,8 @@
 plugins {
     kotlin("multiplatform") version "1.9.0" apply false
     id("org.jetbrains.compose") version "1.5.11" apply false
+    id("com.diffplug.spotless") version "6.25.0" apply false
+    
 }
  
 
@@ -12,6 +14,5 @@ allprojects{
         maven(url = "https://jitpack.io")
         maven("https://maven.aliyun.com/repository/central")
         maven("https://maven.aliyun.com/repository/gradle-plugin")
-        
     }
 }
