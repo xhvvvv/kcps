@@ -5,7 +5,6 @@ plugins {
 
 group = "com.wxfactroy"
 version = "0.0.1"
-
  
 //
 kotlin {
@@ -42,12 +41,20 @@ kotlin {
 
     sourceSets {
         val commonMain by getting {
+            
             dependencies{
                 implementation(compose.foundation)
                 implementation(compose.material3)
 //                implementation(compose.preview)
                 implementation(compose.runtime)
                 implementation(compose.runtimeSaveable)
+                
+                /** Koin */
+                implementation(platform("io.insert-koin:koin-bom:3.5.3"))
+                implementation("io.insert-koin:koin-core")
+                
+
+                
             }
             
         }
