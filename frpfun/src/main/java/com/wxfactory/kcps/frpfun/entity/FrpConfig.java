@@ -1,5 +1,10 @@
 package com.wxfactory.kcps.frpfun.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.io.Serializable;
 import java.net.InetSocketAddress;
 
@@ -8,11 +13,24 @@ import java.net.InetSocketAddress;
  * @author  xhvvvv
  * @time    2024/3/16
  */
-public class FrpConfig implements Serializable {
+@Setter
+@Getter
+public abstract class FrpConfig implements Serializable {
     private static final long serialVersionUID = -1522447679221326708L;
     /** 表示公网的地址 */
-    private InetSocketAddress publicConnect;
+    @NotNull
+    protected InetSocketAddress publicConnect;
     
     /** 认证方式 */
-    private Authentication authentication;
+    @Nullable
+    protected Authentication authentication;
+
+    public FrpConfig(@NotNull InetSocketAddress publicConnect) {
+        this.publicConnect = publicConnect;
+    }
+
+    public FrpConfig(@NotNull InetSocketAddress publicConnect, @Nullable Authentication authentication) {
+        this.publicConnect = publicConnect;
+        this.authentication = authentication;
+    }
 }
