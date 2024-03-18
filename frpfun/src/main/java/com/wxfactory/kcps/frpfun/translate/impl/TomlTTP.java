@@ -19,7 +19,7 @@ import static com.wxfactory.kcps.frpfun.util.Const.ppties;
 public class TomlTTP implements ToTypeProcessor<FrpConfigC> {
     
     @Override
-    public String transfer(FrpConfigC frpConfigC) {
+    public String  transfer(FrpConfigC frpConfigC) {
         StringBuilder sb = new StringBuilder();
         sb.append("#").append((String)ppties.get("tofileHeader")).append("\n");
         
@@ -37,16 +37,14 @@ public class TomlTTP implements ToTypeProcessor<FrpConfigC> {
         sb.append("###########################################").append("\n");
         
         FrpConfigC temPre  = frpConfigC;
-        FrpConfigC temNext = frpConfigC;
-        
         //向前遍历
         do{
             handleSpecifyFcc(temPre , sb);
-        } while ((temPre = frpConfigC.getPre() )!=null);
-        
-        
+        } while ((temPre = temPre.getPre() )!=null);
+    
+        FrpConfigC temNext = frpConfigC;
         //向后遍历
-        while ((temNext = frpConfigC.getNext() )!=null){
+        while ((temNext = temNext.getNext() )!=null){
             handleSpecifyFcc(temNext , sb);
         }
         return sb.toString();
@@ -55,32 +53,26 @@ public class TomlTTP implements ToTypeProcessor<FrpConfigC> {
     
     
     private void handleSpecifyFcc(FrpConfigC frpConfigC , StringBuilder sb){
+         if (frpConfigC instanceof XtcpFcc){
+            XtcpFcc vvvv = ((XtcpFcc) frpConfigC);
+            sb.append("[[proxies]]").append("\n")
+                    .append("secretKey = ")   .append("\"")       .append( vvvv .getSecretKey())    .append("\"\n");
         
-        // TCP转换
-        if (frpConfigC instanceof TcpFcc) {
+            if (StrUtil.isNotEmpty(vvvv .getServerName()))  sb.append("serverName = ")      .append("\"")       .append( vvvv .getServerName())         .append("\"\n");
+            if (StrUtil.isNotEmpty(vvvv .getBindAddr()))    sb.append("bindAddr = ")        .append("\"")       .append( vvvv .getBindAddr())           .append("\"\n");
+            if (StrUtil.isNotEmpty(vvvv .getBindPort()))    sb.append("bindPort = ")        .append("\"")       .append( vvvv .getBindPort())           .append("\"\n");
+            if (vvvv .getKeepTunnelOpen() != null )         sb.append("keepTunnelOpen = ")  .append("\"")       .append( vvvv .getKeepTunnelOpen())     .append("\"\n");
+        
+            if (StrUtil.isNotEmpty(vvvv .getLocalIP()))     sb.append("localIP = ")         .append("\"")       .append( vvvv .getLocalIP())            .append("\"\n");
+            if (vvvv .getLocalPort() !=null)                sb.append("localPort = ")       .append("\"")       .append( vvvv .getLocalPort())          .append("\"\n");
+        
+        }else if (frpConfigC instanceof TcpFcc) {// TCP转换
             TcpFcc vvvv = ((TcpFcc) frpConfigC);
             sb.append("[[proxies]]").append("\n")
                     .append("localIP = ")   .append("\"")       .append( vvvv .getLocalIP())    .append("\"\n")
                     .append("localPort = ") .append("\"")       .append( vvvv.getLocalPort())   .append("\"\n")
                     .append("remotePort = ").append("\"")       .append( vvvv.getRemotePort())  .append("\"\n");
-        }else if (frpConfigC instanceof XtcpFcc){
-            XtcpFcc vvvv = ((XtcpFcc) frpConfigC);
-            sb.append("[[proxies]]").append("\n")
-                    .append("secretKey = ")   .append("\"")       .append( vvvv .getSecretKey())    .append("\"\n");
-            
-            if (StrUtil.isNotEmpty(vvvv .getServerName()))  sb.append("serverName = ")      .append("\"")       .append( vvvv .getServerName())         .append("\"\n");
-            if (StrUtil.isNotEmpty(vvvv .getBindAddr()))    sb.append("bindAddr = ")        .append("\"")       .append( vvvv .getBindAddr())           .append("\"\n");
-            if (StrUtil.isNotEmpty(vvvv .getBindPort()))    sb.append("bindPort = ")        .append("\"")       .append( vvvv .getBindPort())           .append("\"\n");
-            if (vvvv .getKeepTunnelOpen() != null )         sb.append("keepTunnelOpen = ")  .append("\"")       .append( vvvv .getKeepTunnelOpen())     .append("\"\n");
-    
-            if (StrUtil.isNotEmpty(vvvv .getLocalIP()))     sb.append("localIP = ")         .append("\"")       .append( vvvv .getLocalIP())            .append("\"\n");
-            if (vvvv .getLocalPort() !=null)                sb.append("localPort = ")       .append("\"")       .append( vvvv .getLocalPort())          .append("\"\n");
-    
         }
-        
-        
-        
-        
         
         sb.append("name = ")   .append("\"")       .append( frpConfigC .getName())    .append("\"\n")
           .append("type = ")   .append("\"")       .append( frpConfigC .getType())    .append("\"\n");
