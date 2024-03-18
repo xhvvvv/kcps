@@ -29,6 +29,10 @@ public abstract class FrpConfig implements Serializable {
         this.publicConnect = publicConnect;
     }
 
+    public FrpConfig(String host,int port) {
+        this.publicConnect = new InetSocketAddress(host,port);
+    }
+
     public FrpConfig(@NotNull InetSocketAddress publicConnect, @Nullable Authentication authentication) {
         this.publicConnect = publicConnect;
         this.authentication = authentication;

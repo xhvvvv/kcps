@@ -28,4 +28,8 @@ tasks.test{
 //    useJUnit() junit4
 //    useTestNG()
     useJUnitPlatform() //junit5
+    this.testLogging {
+        this.showStandardStreams = true
+        this.debug 
+    }
 }

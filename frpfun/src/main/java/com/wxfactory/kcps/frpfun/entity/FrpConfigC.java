@@ -3,8 +3,6 @@ package com.wxfactory.kcps.frpfun.entity;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.net.InetSocketAddress;
 
@@ -24,7 +22,10 @@ public class FrpConfigC extends FrpConfig{
     
     private FrpConfigC pre;
     private FrpConfigC next;
-
+   
+    public FrpConfigC(String host,int port) {
+        super(new InetSocketAddress(host,port));
+    }
     /**
      * 在本配置添加一个节点
      * @author xhvvvv
@@ -33,7 +34,10 @@ public class FrpConfigC extends FrpConfig{
      * @return
      */
     public <T extends FrpConfigC> T newMyFccWithType(Class<T> t){
-        
+        T fcc = newOneFccWithType(t);
+        fcc.setPre(this);
+        this.setNext(fcc);
+        return fcc;
     }
     
     /**
@@ -44,16 +48,14 @@ public class FrpConfigC extends FrpConfig{
      * @return
      */
     public <T extends FrpConfigC> T newOneFccWithType(Class<T> t){
-        
+        try {
+            T fcc =  t.getDeclaredConstructor(String.class,int.class).newInstance(super.publicConnect.getHostString(),super.getPublicConnect().getPort());
+            return fcc;
+        } catch (Exception e) {
+            throw new NullPointerException("反射构造类失败："+t.getClass().getName());
+        }
     }
     
-    public FrpConfigC(@NotNull InetSocketAddress publicConnect) {
-        super(publicConnect);
-    }
-
-    public FrpConfigC(@NotNull InetSocketAddress publicConnect, @Nullable Authentication authentication) {
-        super(publicConnect, authentication);
-    }
 
     @Override
     public InetSocketAddress getPublicConnect(){
@@ -67,8 +69,9 @@ public class FrpConfigC extends FrpConfig{
     public Authentication getAuthentication(){
         if (super.getAuthentication() != null )
             return super.getAuthentication();
-        else
+        else if (pre !=null)
             return pre.getAuthentication();
+        else return null;
     }
     /**
      * 获取根节点

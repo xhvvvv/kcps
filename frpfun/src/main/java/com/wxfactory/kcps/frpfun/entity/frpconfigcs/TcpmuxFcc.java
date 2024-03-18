@@ -3,6 +3,7 @@ package com.wxfactory.kcps.frpfun.entity.frpconfigcs;
 import com.wxfactory.kcps.frpfun.entity.FrpConfigC;
 import lombok.Getter;
 import lombok.Setter;
+
 /**
  * 端口复用
  * @author  xhvvvv
@@ -16,5 +17,9 @@ public class TcpmuxFcc extends FrpConfigC {
     private String customDomains;
     private String localIP;
     private String localPort;
-   
+    
+    
+    public TcpmuxFcc(String host, int port) {
+        super(host, port);
+    }
 }
