@@ -50,11 +50,23 @@ kotlin {
                 implementation(compose.runtimeSaveable)
                 
                 /** Koin */
-                implementation(platform("io.insert-koin:koin-bom:3.5.3"))
-                implementation("io.insert-koin:koin-core")
-                
+                api(platform("io.insert-koin:koin-bom:3.5.3"))
+                api("io.insert-koin:koin-core")
+                api("io.insert-koin:koin-compose")
 
+                /** settings */
+                api("com.russhwolf:multiplatform-settings-no-arg:1.1.1")
+                api("com.russhwolf:multiplatform-settings-coroutines:1.1.1")
                 
+                /** voyager */
+                val voyagerVersion = "1.0.0"
+                implementation("cafe.adriel.voyager:voyager-navigator:$voyagerVersion")
+                // Screen Model
+                implementation("cafe.adriel.voyager:voyager-screenmodel:$voyagerVersion")
+                // BottomSheetNavigator
+                implementation("cafe.adriel.voyager:voyager-bottom-sheet-navigator:$voyagerVersion")
+                // TabNavigator
+                implementation("cafe.adriel.voyager:voyager-tab-navigator:$voyagerVersion")
             }
             
         }
