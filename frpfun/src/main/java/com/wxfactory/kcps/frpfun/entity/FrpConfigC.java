@@ -14,8 +14,6 @@ import java.net.InetSocketAddress;
 @Getter
 @Setter
 public class FrpConfigC extends FrpConfig{
-    /**名称*/
-    protected String name;
     /**连接类型*/
     protected String type;
     

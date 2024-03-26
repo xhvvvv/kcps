@@ -12,14 +12,22 @@ import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import org.koin.core.Koin
 import org.koin.core.context.startKoin
+import com.wxfactory.kcps.common.Main
+import com.wxfactory.kcps.common.core.moudle.common
+import com.wxfactory.kcps.common.platform.moudleForPf
+import org.koin.dsl.module
 
 lateinit var koin: Koin
 fun main() {
+     
+    
     koin = startKoin {
+        
         // 默认往这个上下文中 注入两个模块
         modules(
             listOf(
-                
+                common,
+                moudleForPf()
             ),
         )
     }.koin
@@ -34,7 +42,7 @@ fun main() {
             ),
         ) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-               Text("kcps启动")
+                Main()
             }
         }
     }

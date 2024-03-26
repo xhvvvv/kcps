@@ -44,11 +44,14 @@ kotlin {
             
             dependencies{
                 implementation(compose.foundation)
+                implementation(compose.material)
                 implementation(compose.material3)
 //                implementation(compose.preview)
                 implementation(compose.runtime)
                 implementation(compose.runtimeSaveable)
                 
+                //提供一些额外的图标
+                implementation(compose.materialIconsExtended)
                 /** Koin */
                 api(platform("io.insert-koin:koin-bom:3.5.3"))
                 api("io.insert-koin:koin-core")
@@ -67,6 +70,10 @@ kotlin {
                 implementation("cafe.adriel.voyager:voyager-bottom-sheet-navigator:$voyagerVersion")
                 // TabNavigator
                 implementation("cafe.adriel.voyager:voyager-tab-navigator:$voyagerVersion")
+                
+                
+                //依赖frp包
+                api(project(":frpfun"))
             }
             
         }

@@ -8,7 +8,7 @@ version = "0.0.1"
 dependencies{
     compileOnly("org.projectlombok:lombok:1.18.30")
     annotationProcessor("org.projectlombok:lombok:1.18.30")
-    implementation("cn.hutool:hutool-all:5.8.26")
+    api("cn.hutool:hutool-all:5.8.26")
     implementation("org.jetbrains:annotations:24.1.0")
 
 //    testImplementation("org.junit.jupiter:junit-jupiter:5.7.1")
