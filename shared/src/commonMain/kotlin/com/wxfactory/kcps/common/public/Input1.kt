@@ -6,13 +6,15 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 /**
  * 配置Frp页使用的输入框
@@ -25,9 +27,10 @@ fun InputNo1(
     currentValue: String,
     onValueChange: (String) -> Unit,
 ) {
+    var fire by remember{ mutableStateOf(currentValue) }
     BloomInputTextField(
         modifier = modifier,
-        textStyle = MaterialTheme.typography.bodyMedium.copy(
+        textStyle = MaterialTheme.typography.bodySmall.copy(
             textAlign = TextAlign.Start,
         ),
         label = {
@@ -38,8 +41,11 @@ fun InputNo1(
                 ),
             )
         },
-        value = TextFieldState(currentValue),
-        onValueChange = onValueChange,
+        value = TextFieldState(fire),
+        onValueChange = {
+            onValueChange(it)
+            fire = it
+        },
         keyboardOptions = KeyboardOptions.Default.copy(
             keyboardType = KeyboardType.Number,
         ),
@@ -69,9 +75,10 @@ internal fun BloomInputTextField(
             label()
             Spacer(modifier = Modifier.height(4.dp))
         }
+        println("表示的风景")
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth()
-                .defaultMinSize(minWidth = 56.dp),
+                .defaultMinSize(minWidth = 40.dp),
             value = value.text,
             onValueChange = onValueChange,
             placeholder = placeholder,
@@ -84,11 +91,10 @@ internal fun BloomInputTextField(
             keyboardOptions = keyboardOptions,
             readOnly = !editable,
         )
-        
         //校验提示信息
-        if (!value.error.isNullOrEmpty()) {
+        value.error?.let {
             Text(
-                text = value.error,
+                text = it,
                 style = MaterialTheme.typography.bodyMedium.copy(
                     color = MaterialTheme.colorScheme.error,
                 ),
@@ -99,6 +105,6 @@ internal fun BloomInputTextField(
 
 
 data class TextFieldState(
-    val text: String = "",
-    val error: String? = null,
+    var text: String = "",
+    var error: String? = null,
 )

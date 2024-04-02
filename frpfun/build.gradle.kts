@@ -33,3 +33,6 @@ tasks.test{
         this.debug 
     }
 }
+tasks.compileJava{
+    this.options.encoding = "UTF-8"
+}

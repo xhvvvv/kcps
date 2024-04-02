@@ -6,7 +6,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.KeyboardArrowUp
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -19,13 +19,14 @@ fun ExtendCard(
     icon: ImageVector,
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
-    onExpand: () -> Unit, //下拉展示的面板
-    expanded: Boolean,
+    onExpand: () -> Unit, //切换展开时的调用
 ) {
+    var ifExpend : Boolean by remember { mutableStateOf(false) }
     Card(
         modifier = modifier,
         onClick = {
             onExpand()
+            ifExpend = ifExpend.not()
         },
     ) {
         Column(
@@ -42,30 +43,53 @@ fun ExtendCard(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
-                    Icon(
-                        imageVector = icon,
-                        contentDescription = name,
-                    )
-                    Text(
-                        text = name,
-                        style = MaterialTheme.typography.titleLarge,
-                    )
+                    Column(modifier = Modifier.weight(0.2f)) {
+                        Icon(
+                            imageVector = icon,
+                            contentDescription = name,
+                        )
+                        Text(
+                            text = name,
+                            style = MaterialTheme.typography.titleSmall,
+                        )
+                    }
+                    Column(modifier = Modifier.weight(0.6f)) {
+                        Text(
+                            text = "状态区",
+                            style = MaterialTheme.typography.titleSmall,
+                        )
+                    }
+                    Column(modifier = Modifier
+                        .weight(0.2f),
+                        horizontalAlignment = Alignment.End
+                    ) {
+                         Row( ) {
+                             Text(
+                                 text = "操作区",
+                                 style = MaterialTheme.typography.titleSmall,
+                             )
+                             // 下拉按钮
+                             IconButton(onClick = {
+                                 onExpand()
+                                 ifExpend = ifExpend.not()
+                             }) {
+                                 Icon(
+                                     imageVector = if (ifExpend) {
+                                         Icons.Rounded.KeyboardArrowUp
+                                     } else {
+                                         Icons.Rounded.KeyboardArrowDown
+                                     },
+                                     contentDescription = null,
+                                 )
+                             }
+                         }
+                    }
                 }
 
                 
-                // 下拉按钮
-                IconButton(onClick = { onExpand() }) {
-                    Icon(
-                        imageVector = if (expanded) {
-                            Icons.Rounded.KeyboardArrowUp
-                        } else {
-                            Icons.Rounded.KeyboardArrowDown
-                        },
-                        contentDescription = null,
-                    )
-                }
+                
             }
-            AnimatedVisibility(expanded) {
+            AnimatedVisibility(ifExpend) {
                 Column {
                     Spacer(modifier = Modifier.height(8.dp))
                     content()

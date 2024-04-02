@@ -19,6 +19,7 @@ public abstract class FrpConfig implements Serializable {
     private static final long serialVersionUID = -1522447679221326708L;
     /**名称*/
     protected String name;
+    
     /** 表示公网的地址 */
     @NotNull
     protected InetSocketAddress publicConnect;

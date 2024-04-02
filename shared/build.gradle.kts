@@ -5,11 +5,10 @@ plugins {
 
 group = "com.wxfactroy"
 version = "0.0.1"
- 
 //
 kotlin {
     jvm {
-        jvmToolchain(8)
+        jvmToolchain(17)
         withJava()
         testRuns.named("test") {
             executionTask.configure {
@@ -38,7 +37,7 @@ kotlin {
 //        else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
 //    }
 
-
+    
     sourceSets {
         val commonMain by getting {
             
@@ -74,6 +73,8 @@ kotlin {
                 
                 //依赖frp包
                 api(project(":frpfun"))
+
+                api(kotlin("reflect"))
             }
             
         }

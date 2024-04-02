@@ -7,10 +7,16 @@ dependencies {
     implementation(project(":shared"))
     implementation(compose.desktop.currentOs)
 }
+tasks.compileJava{
+    this.options.encoding = "utf-8"
+}
+ 
 
 compose.desktop {
+    
     application {
-        mainClass = "MainKt"
+//        this.jvmArgs.add()
+        mainClass = "com.wxfactory.kcps.desktop.MainKt"
         nativeDistributions {
             targetFormats(
                 org.jetbrains.compose.desktop.application.dsl.TargetFormat.Dmg,
@@ -21,5 +27,7 @@ compose.desktop {
             packageName = "frpClient"
             packageName = "1.0.0"
         }
+        
     }
+    
 }
