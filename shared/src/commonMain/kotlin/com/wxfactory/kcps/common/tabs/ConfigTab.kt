@@ -1,28 +1,41 @@
 package com.wxfactory.kcps.common.tabs
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.HourglassEmpty
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.bottomSheet.BottomSheetNavigator
+import cafe.adriel.voyager.navigator.bottomSheet.LocalBottomSheetNavigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.wxfactory.kcps.common.public.ExtendCard
 import com.wxfactory.kcps.common.public.InputNo1
+import com.wxfactory.kcps.common.public.Select
+import com.wxfactory.kcps.common.public.TextFieldState
 import com.wxfactory.kcps.common.screen.data.ScreenViewModel
 import com.wxfactory.kcps.common.util.i18N
 import com.wxfactory.kcps.frpfun.entity.FrpConfig
 import com.wxfactory.kcps.frpfun.entity.FrpConfigC
+import com.wxfactory.kcps.frpfun.entity.FrpcTypes
+import com.wxfactory.kcps.frpfun.entity.frpconfigcs.TcpFcc
 import org.koin.compose.koinInject
 import org.koin.core.qualifier.named
+import java.util.*
 import kotlin.reflect.KMutableProperty
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.jvm.isAccessible
@@ -48,16 +61,66 @@ class ConfigTab() : Tab{
 }
  
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SettingsScreen(
     mainViewModel: ScreenViewModel = koinInject<ScreenViewModel>(),
     fcs: MutableList<FrpConfig> = koinInject<MutableList<FrpConfig>>(named("fcs")),
 ) {
-    val darkTheme = when (mainViewModel.appTheme.collectAsState().value) {
-        1 -> true
-        else -> false
+
+    BottomSheetNavigator {
+        Scaffold(
+            bottomBar = {
+                BottomAppBar(
+                    actions = {
+
+                    },
+                    floatingActionButton = {
+                        val bottomSheetNavigator = LocalBottomSheetNavigator.current
+                        FloatingActionButton(
+                            onClick = {
+                                bottomSheetNavigator.show( AddPanel() )
+                            },
+                            containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
+                            elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
+                        ) {
+                            Icon(Icons.Filled.Add, "Localized description")
+                        }
+                    }
+                )
+            },
+        ) { innerPadding ->
+            SettingsScreenContent(fcs)
+        }
     }
-    SettingsScreenContent(fcs)
+   
+}
+private class AddPanel :Screen{
+    @Composable
+    override fun Content() {
+        Card(
+            modifier = Modifier. heightIn(300.dp) 
+        ) {
+            var chosed by remember { mutableStateOf(FrpcTypes.TCP.name) }
+            val fcs: MutableList<FrpConfig> = koinInject<MutableList<FrpConfig>>(named("fcs"))
+            Select<FrpcTypes>(
+                modifier = Modifier.fillMaxWidth(),
+                options = FrpcTypes.values().toList(),
+                selectedOption = TextFieldState(chosed,null),
+                onOptionSelected = { ii -> chosed =ii.name }
+            )
+            FilledTonalButton(onClick = {
+                
+                FrpcTypes.valueOf(chosed)
+                val tfc: TcpFcc = TcpFcc("lkasdjfl",21)
+                
+                fcs.add(tfc)
+            }) {
+                Text("Tonal")
+            }
+        }
+    }
+
 }
 
 @Composable

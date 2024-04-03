@@ -43,30 +43,48 @@ fun ExtendCard(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
+                    
+                    //前
                     Column(modifier = Modifier.weight(0.2f)) {
-                        Icon(
-                            imageVector = icon,
-                            contentDescription = name,
-                        )
-                        Text(
-                            text = name,
-                            style = MaterialTheme.typography.titleSmall,
-                        )
+                        Row {
+                            Icon(
+                                imageVector = icon,
+                                contentDescription = name,
+                            )
+                            Text(
+                                text = name,
+                                style = MaterialTheme.typography.titleSmall,
+                            )
+                        }
                     }
-                    Column(modifier = Modifier.weight(0.6f)) {
-                        Text(
-                            text = "状态区",
-                            style = MaterialTheme.typography.titleSmall,
-                        )
+                    
+                    //中
+                    Column(modifier = Modifier.weight(0.4f)) {
+                        Row {
+                            Text(
+                                text = "类型",
+                                style = MaterialTheme.typography.titleSmall,
+                            )
+                            Text(
+                                text = "简介",
+                                style = MaterialTheme.typography.titleSmall,
+                            )
+                        }
                     }
+                    
+//                    后
                     Column(modifier = Modifier
-                        .weight(0.2f),
+                        .weight(0.5f),
                         horizontalAlignment = Alignment.End
                     ) {
-                         Row( ) {
-                             Text(
-                                 text = "操作区",
-                                 style = MaterialTheme.typography.titleSmall,
+                         Row(
+                             verticalAlignment = Alignment.CenterVertically
+                         ) {
+                             Switch(
+                                 checked = false,
+                                 onCheckedChange = {
+                                     
+                                 }
                              )
                              // 下拉按钮
                              IconButton(onClick = {

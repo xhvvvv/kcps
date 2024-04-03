@@ -33,7 +33,6 @@ fun Main(
     val allTabs = remember {  }
 //    //表示指定koin上下文，默认也是GlobalContext，感觉要不要都无所谓
 //    KoinContext{}
-
     val autoColors = if (darkTheme) DarkColors else LightColors
     MaterialTheme(
         colorScheme = autoColors,

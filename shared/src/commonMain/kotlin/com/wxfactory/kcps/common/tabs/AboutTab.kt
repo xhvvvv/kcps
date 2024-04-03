@@ -35,7 +35,7 @@ class AboutTab() : Tab{
     override val options: TabOptions
         @Composable
         get() {
-            val title = "Home"
+            val title = "Author"
             val imageVector = rememberVectorPainter( Icons.Outlined.Engineering)
             return TabOptions(
                 index = 1u,
