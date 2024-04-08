@@ -95,44 +95,6 @@ fun SettingsScreen(
     }
    
 }
-private class AddPanel(
-    val fcs:MutableList<FrpConfig>,
-    val doneCallBack : () -> Unit
-) :Screen{
-    
-    
-    @Composable
-    override fun Content() {
-        Card(
-            modifier = Modifier. heightIn(300.dp) 
-        ) {
-            var chosed by remember { mutableStateOf(FrpcTypes.TCP.name) }
-            Select<FrpcTypes>(
-                modifier = Modifier.fillMaxWidth(),
-                options = FrpcTypes.values().toList(),
-                selectedOption = TextFieldState(chosed,null),
-                onOptionSelected = { ii -> chosed =ii.name }
-            )
-            FilledTonalButton(onClick = {
-                println(System.currentTimeMillis())
-                FrpcTypes.valueOf(chosed)
-                println(System.currentTimeMillis())
-                val tfc: TcpFcc = TcpFcc("lkasdjfl",21)
-                println(System.currentTimeMillis())
-                tfc.name = "行增"
-                println(System.currentTimeMillis())
-                doneCallBack()
-                println(System.currentTimeMillis())
-                fcs.add(tfc)
-                println("${System.currentTimeMillis()} done ")
-            }) {
-                Text("Tonal")
-            }
-        }
-    }
-
-}
-
 @Composable
 fun SettingsScreenContent(
     frpConfigs : MutableList<FrpConfig>
@@ -179,32 +141,57 @@ fun FrpCPanel(
         name = fc.name,
         icon = Icons.Outlined.HourglassEmpty,
         content = {
+            FlowRow(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                maxItemsInEachRow = 5
+            ){
+                Text("路口撒旦放11")
+                 
+            }
+        },
+    )
+}
+@Deprecated("反射构造造成性能低下")
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun FrpCPanelReflect(
+    onExpand: (String) -> Unit,
+    fc: FrpConfigC,
+) {
+    ExtendCard(
+        onExpand = {
+            onExpand("Focus Sessions")
+        },
+        name = fc.name,
+        icon = Icons.Outlined.HourglassEmpty,
+        content = {
             //反射太慢
-//            val allpropertis  =  fc::class.memberProperties
+            val allpropertis  =  fc::class.memberProperties
             FlowRow(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 maxItemsInEachRow = 5
             ){
                 Text("路口撒旦放")
-//                for (ap in allpropertis) {
-//                    ap.isAccessible = true
-//                    i18N.getProperty("cg-${ap.name}")?.let{
-//                        InputNo1(
-//                            modifier = Modifier.width(200.dp),
-//                            title = it,
-//                            currentValue = ap.call(fc).run {
-//                                if (this == null) return@run "" else return@run this as String
-//                            },
-//                            onValueChange = {
-//                                if (ap is KMutableProperty<*>) {
-//                                    //修改属性值，调用setter方法
-//                                    ap.setter.call(fc, it)
-//                                }
-//                            },
-//                        )
-//                    }
-//                }
+                for (ap in allpropertis) {
+                    ap.isAccessible = true
+                    i18N.getProperty("cg-${ap.name}")?.let{
+                        InputNo1(
+                            modifier = Modifier.width(200.dp),
+                            title = it,
+                            currentValue = ap.call(fc).run {
+                                if (this == null) return@run "" else return@run this as String
+                            },
+                            onValueChange = {
+                                if (ap is KMutableProperty<*>) {
+                                    //修改属性值，调用setter方法
+                                    ap.setter.call(fc, it)
+                                }
+                            },
+                        )
+                    }
+                }
             }
         },
     )

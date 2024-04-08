@@ -21,13 +21,13 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun <T> Select(
     modifier: Modifier = Modifier,
-    label: (@Composable () -> Unit)? = null,
     options: List<T>,
     enabled: Boolean = true,
     selectedOption: TextFieldState,
     onOptionSelected: (T) -> Unit,
     textStyle: TextStyle = MaterialTheme.typography.titleSmall,
     shape: CornerBasedShape = MaterialTheme.shapes.small,
+    label: (@Composable () -> Unit)? = null,
 ) {
     var expanded by remember { mutableStateOf(false) }
     Column {

@@ -13,12 +13,9 @@ public class FrpConfigS extends FrpConfig{
     private String kcpBindPort;
     private String quicBindPort;
     private String tcpmuxHTTPConnectPort ;
-
-    public FrpConfigS(@NotNull InetSocketAddress publicConnect) {
-        super(publicConnect);
-    }
-
-    public FrpConfigS(@NotNull InetSocketAddress publicConnect, @Nullable Authentication authentication) {
-        super(publicConnect, authentication);
+    
+    
+    public FrpConfigS(@NotNull String host, @NotNull Integer port) {
+        super(host, port);
     }
 }

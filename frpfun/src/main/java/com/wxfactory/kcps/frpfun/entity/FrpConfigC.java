@@ -22,7 +22,7 @@ public class FrpConfigC extends FrpConfig{
     private FrpConfigC next;
    
     public FrpConfigC(String host,int port) {
-        super(new InetSocketAddress(host,port));
+        super(host,port);
     }
     /**
      * 在本配置添加一个节点
@@ -47,21 +47,13 @@ public class FrpConfigC extends FrpConfig{
      */
     public <T extends FrpConfigC> T newOneFccWithType(Class<T> t){
         try {
-            T fcc =  t.getDeclaredConstructor(String.class,int.class).newInstance(super.publicConnect.getHostString(),super.getPublicConnect().getPort());
+            T fcc =  t.getDeclaredConstructor(String.class,int.class).newInstance(super.getHost(),super.getPort());
             return fcc;
         } catch (Exception e) {
             throw new NullPointerException("反射构造类失败："+t.getClass().getName());
         }
     }
     
-
-    @Override
-    public InetSocketAddress getPublicConnect(){
-        if (super.getPublicConnect() != null )
-            return super.getPublicConnect();
-        else
-            return pre.getPublicConnect();
-    }
     
     @Override
     public Authentication getAuthentication(){

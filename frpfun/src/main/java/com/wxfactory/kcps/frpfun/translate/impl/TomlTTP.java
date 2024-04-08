@@ -25,9 +25,10 @@ public class TomlTTP implements ToTypeProcessor<FrpConfigC> {
         
         //转根信息
         Authentication authentication =  frpConfigC.getAuthentication();
-        InetSocketAddress inetSocketAddress = frpConfigC.getPublicConnect();
-        sb.append("serverAddr = ").append(inetSocketAddress.getHostName()).append("\n")
-                .append("serverPort = ").append(inetSocketAddress.getPort()).append("\n");
+        String host = frpConfigC.getHost();
+        Integer port = frpConfigC.getPort();
+        sb.append("serverAddr = ").append(host).append("\n")
+                .append("serverPort = ").append(port).append("\n");
         
         if (authentication!=null){
             // Xhvvvv_Sign_TODO xhvvvv 2024/3/16 默认一周内完成  
