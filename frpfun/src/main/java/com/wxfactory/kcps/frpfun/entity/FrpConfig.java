@@ -1,5 +1,6 @@
 package com.wxfactory.kcps.frpfun.entity;
 
+import cn.hutool.core.lang.Snowflake;
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
@@ -20,6 +21,8 @@ public abstract class FrpConfig implements Serializable {
     /**名称*/
     protected String name;
     
+    /**标识Id */
+    protected String id;
     /** 表示公网的地址 */
     @NotNull
     protected InetSocketAddress publicConnect;
@@ -27,17 +30,23 @@ public abstract class FrpConfig implements Serializable {
     /** 认证方式 */
     @Nullable
     protected Authentication authentication;
-
+    
     public FrpConfig(@NotNull InetSocketAddress publicConnect) {
         this.publicConnect = publicConnect;
+        generateId();
     }
-
+    protected void generateId(){
+        Snowflake snowflake = new Snowflake(1, 1);
+        this.id = String.valueOf(snowflake.nextId());
+    }
     public FrpConfig(String host,int port) {
         this.publicConnect = new InetSocketAddress(host,port);
+        generateId();
     }
 
     public FrpConfig(@NotNull InetSocketAddress publicConnect, @Nullable Authentication authentication) {
         this.publicConnect = publicConnect;
         this.authentication = authentication;
+        generateId();
     }
 }

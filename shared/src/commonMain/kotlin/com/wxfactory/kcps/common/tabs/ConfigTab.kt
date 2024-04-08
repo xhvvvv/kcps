@@ -65,9 +65,9 @@ class ConfigTab() : Tab{
 @Composable
 fun SettingsScreen(
     mainViewModel: ScreenViewModel = koinInject<ScreenViewModel>(),
-    fcs: MutableList<FrpConfig> = koinInject<MutableList<FrpConfig>>(named("fcs")),
+    fcs: MutableList<FrpConfig> =   koinInject<MutableList<FrpConfig>>(named("fcs"))  ,
 ) {
-
+    val stateFcs = remember { fcs.toMutableStateList() }
     BottomSheetNavigator {
         Scaffold(
             bottomBar = {
@@ -79,7 +79,7 @@ fun SettingsScreen(
                         val bottomSheetNavigator = LocalBottomSheetNavigator.current
                         FloatingActionButton(
                             onClick = {
-                                bottomSheetNavigator.show( AddPanel() )
+                                bottomSheetNavigator.show( AddPanel(stateFcs,{ it.hide() }) )
                             },
                             containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
                             elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
@@ -90,19 +90,23 @@ fun SettingsScreen(
                 )
             },
         ) { innerPadding ->
-            SettingsScreenContent(fcs)
+            SettingsScreenContent(stateFcs)
         }
     }
    
 }
-private class AddPanel :Screen{
+private class AddPanel(
+    val fcs:MutableList<FrpConfig>,
+    val doneCallBack : () -> Unit
+) :Screen{
+    
+    
     @Composable
     override fun Content() {
         Card(
             modifier = Modifier. heightIn(300.dp) 
         ) {
             var chosed by remember { mutableStateOf(FrpcTypes.TCP.name) }
-            val fcs: MutableList<FrpConfig> = koinInject<MutableList<FrpConfig>>(named("fcs"))
             Select<FrpcTypes>(
                 modifier = Modifier.fillMaxWidth(),
                 options = FrpcTypes.values().toList(),
@@ -110,11 +114,17 @@ private class AddPanel :Screen{
                 onOptionSelected = { ii -> chosed =ii.name }
             )
             FilledTonalButton(onClick = {
-                
+                println(System.currentTimeMillis())
                 FrpcTypes.valueOf(chosed)
+                println(System.currentTimeMillis())
                 val tfc: TcpFcc = TcpFcc("lkasdjfl",21)
-                
+                println(System.currentTimeMillis())
+                tfc.name = "行增"
+                println(System.currentTimeMillis())
+                doneCallBack()
+                println(System.currentTimeMillis())
                 fcs.add(tfc)
+                println("${System.currentTimeMillis()} done ")
             }) {
                 Text("Tonal")
             }
@@ -136,11 +146,10 @@ fun SettingsScreenContent(
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
+        println("shit")
         this.items(
-            items = frpConfigs,
-            key = { x ->
-                x.name.hashCode()
-            }
+            items = frpConfigs ,
+            key = { x -> x.id }
         ) {
             if (it is FrpConfigC) {
                 FrpCPanel(
@@ -170,30 +179,32 @@ fun FrpCPanel(
         name = fc.name,
         icon = Icons.Outlined.HourglassEmpty,
         content = {
-            val allpropertis  =  fc::class.memberProperties
+            //反射太慢
+//            val allpropertis  =  fc::class.memberProperties
             FlowRow(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 maxItemsInEachRow = 5
             ){
-                for (ap in allpropertis) {
-                    ap.isAccessible = true
-                    i18N.getProperty("cg-${ap.name}")?.let{
-                        InputNo1(
-                            modifier = Modifier.width(200.dp),
-                            title = it,
-                            currentValue = ap.call(fc).run {
-                                if (this == null) return@run "" else return@run this as String
-                            },
-                            onValueChange = {
-                                if (ap is KMutableProperty<*>) {
-                                    //修改属性值，调用setter方法
-                                    ap.setter.call(fc, it)
-                                }
-                            },
-                        )
-                    }
-                }
+                Text("路口撒旦放")
+//                for (ap in allpropertis) {
+//                    ap.isAccessible = true
+//                    i18N.getProperty("cg-${ap.name}")?.let{
+//                        InputNo1(
+//                            modifier = Modifier.width(200.dp),
+//                            title = it,
+//                            currentValue = ap.call(fc).run {
+//                                if (this == null) return@run "" else return@run this as String
+//                            },
+//                            onValueChange = {
+//                                if (ap is KMutableProperty<*>) {
+//                                    //修改属性值，调用setter方法
+//                                    ap.setter.call(fc, it)
+//                                }
+//                            },
+//                        )
+//                    }
+//                }
             }
         },
     )
