@@ -65,7 +65,7 @@ class ConfigTab() : Tab{
 @Composable
 fun SettingsScreen(
     mainViewModel: ScreenViewModel = koinInject<ScreenViewModel>(),
-    fcs: MutableList<FrpConfig> =   koinInject<MutableList<FrpConfig>>(named("fcs"))  ,
+    fcs: MutableList<FrpConfig> =   koinInject<MutableList<FrpConfig>>(named("fcs")),
 ) {
     val stateFcs = remember { fcs.toMutableStateList() }
     BottomSheetNavigator {
@@ -79,7 +79,12 @@ fun SettingsScreen(
                         val bottomSheetNavigator = LocalBottomSheetNavigator.current
                         FloatingActionButton(
                             onClick = {
-                                bottomSheetNavigator.show( AddPanel(stateFcs,{ it.hide() }) )
+                                bottomSheetNavigator.show( 
+                                    AddPanel(stateFcs){ tfc -> 
+                                        it.hide() 
+                                        fcs.add(tfc)
+                                    } 
+                                )
                             },
                             containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
                             elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
@@ -103,7 +108,6 @@ fun SettingsScreenContent(
         modifier = Modifier
             .fillMaxSize()
             .padding(10.dp)
-
         ,
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -115,7 +119,7 @@ fun SettingsScreenContent(
         ) {
             if (it is FrpConfigC) {
                 FrpCPanel(
-                    onExpand = { it -> println("切换") },
+                    onExpand = { it ->   },
                     it
                 )
             } else {

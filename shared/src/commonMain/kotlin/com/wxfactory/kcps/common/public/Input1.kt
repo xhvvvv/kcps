@@ -75,7 +75,6 @@ internal fun BloomInputTextField(
             label()
             Spacer(modifier = Modifier.height(4.dp))
         }
-        println("表示的风景")
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth()
                 .defaultMinSize(minWidth = 40.dp),
