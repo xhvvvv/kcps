@@ -5,8 +5,10 @@ import com.wxfactory.kcps.frpfun.entity.frpconfigcs.FileFcc;
 import com.wxfactory.kcps.frpfun.entity.frpconfigcs.HttpFcc;
 import com.wxfactory.kcps.frpfun.entity.frpconfigcs.StcpFcc;
 import com.wxfactory.kcps.frpfun.entity.frpconfigcs.TcpFcc;
+import com.wxfactory.kcps.frpfun.entity.frpconfigcs.TcpmuxFcc;
 import com.wxfactory.kcps.frpfun.entity.frpconfigcs.UdpFcc;
 import com.wxfactory.kcps.frpfun.entity.frpconfigcs.XtcpFcc;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,6 +25,8 @@ import java.util.Map;
 @Setter
 public class FrpConfigC extends FrpConfig{
     /**连接类型*/
+    @Getter
+    @Setter(value = AccessLevel.NONE)
     protected String type;
     private FrpConfigC pre;
     private FrpConfigC next;
@@ -30,7 +34,7 @@ public class FrpConfigC extends FrpConfig{
     static {
         mapperClass.put(FrpcTypes.HTTP, HttpFcc.class);
         mapperClass.put(FrpcTypes.STCP, StcpFcc.class);
-        mapperClass.put(FrpcTypes.TCPMUX, XtcpFcc.class);
+        mapperClass.put(FrpcTypes.TCPMUX, TcpmuxFcc.class);
         mapperClass.put(FrpcTypes.UDP, UdpFcc.class);
         mapperClass.put(FrpcTypes.XTCP, XtcpFcc.class);
         mapperClass.put(FrpcTypes.TCP, TcpFcc.class);

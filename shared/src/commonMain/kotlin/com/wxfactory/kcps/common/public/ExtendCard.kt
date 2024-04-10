@@ -3,6 +3,10 @@ package com.wxfactory.kcps.common.public
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Category
+import androidx.compose.material.icons.outlined.Circle
+import androidx.compose.material.icons.outlined.HourglassEmpty
+import androidx.compose.material.icons.outlined.LocalTaxi
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.KeyboardArrowUp
 import androidx.compose.material3.*
@@ -11,15 +15,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import com.wxfactory.kcps.frpfun.entity.FrpConfigC
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ExtendCard(
-    name: String,
-    icon: ImageVector,
+fun fccExtendCard(
+    fc: FrpConfigC,
     modifier: Modifier = Modifier,
-    content: @Composable () -> Unit,
     onExpand: () -> Unit, //切换展开时的调用
+    content: @Composable ( fc: FrpConfigC ) -> Unit,
 ) {
     var ifExpend : Boolean by remember { mutableStateOf(false) }
     Card(
@@ -32,7 +36,6 @@ fun ExtendCard(
         Column(
             modifier = modifier.padding(16.dp),
         ) {
-            
             // 展示信息
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -43,32 +46,47 @@ fun ExtendCard(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
-                    
                     //前
                     Column(modifier = Modifier.weight(0.2f)) {
                         Row {
                             Icon(
-                                imageVector = icon,
-                                contentDescription = name,
+                                imageVector = Icons.Outlined.HourglassEmpty,
+                                contentDescription = "配置名称",
                             )
                             Text(
-                                text = name,
+                                text = fc.name,
                                 style = MaterialTheme.typography.titleSmall,
                             )
                         }
                     }
-                    
                     //中
                     Column(modifier = Modifier.weight(0.4f)) {
                         Row {
-                            Text(
-                                text = "类型",
-                                style = MaterialTheme.typography.titleSmall,
-                            )
-                            Text(
-                                text = "简介",
-                                style = MaterialTheme.typography.titleSmall,
-                            )
+                            Card(
+                                modifier=Modifier.fillMaxWidth(0.2f)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Outlined.Category,
+                                    contentDescription = "协议类型",
+                                )
+                                Text(
+                                    text = fc.type,
+                                    style = MaterialTheme.typography.titleSmall,
+                                )
+                            }
+                            
+                            Card(
+                                modifier=Modifier.fillMaxWidth(0.2f)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Outlined.Circle,
+                                    contentDescription = "占用端口",
+                                )
+                                Text(
+                                    text = "",
+                                    style = MaterialTheme.typography.titleSmall,
+                                )
+                            }
                         }
                     }
                     
@@ -110,7 +128,7 @@ fun ExtendCard(
             AnimatedVisibility(ifExpend) {
                 Column {
                     Spacer(modifier = Modifier.height(8.dp))
-                    content()
+                    content(fc)
                 }
             }
         }

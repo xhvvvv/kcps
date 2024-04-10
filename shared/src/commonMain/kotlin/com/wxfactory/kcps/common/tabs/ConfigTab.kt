@@ -23,11 +23,9 @@ import cafe.adriel.voyager.navigator.bottomSheet.BottomSheetNavigator
 import cafe.adriel.voyager.navigator.bottomSheet.LocalBottomSheetNavigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
-import com.wxfactory.kcps.common.public.ExtendCard
-import com.wxfactory.kcps.common.public.InputNo1
-import com.wxfactory.kcps.common.public.Select
-import com.wxfactory.kcps.common.public.TextFieldState
+import com.wxfactory.kcps.common.public.*
 import com.wxfactory.kcps.common.screen.data.ScreenViewModel
+import com.wxfactory.kcps.common.tabs.fccShow.topShow
 import com.wxfactory.kcps.common.util.i18N
 import com.wxfactory.kcps.frpfun.entity.FrpConfig
 import com.wxfactory.kcps.frpfun.entity.FrpConfigC
@@ -95,20 +93,18 @@ fun SettingsScreen(
                 )
             },
         ) { innerPadding ->
-            SettingsScreenContent(stateFcs)
+            SettingsScreenContent(modifier=Modifier.padding(innerPadding), stateFcs)
         }
     }
    
 }
 @Composable
 fun SettingsScreenContent(
+    modifier : Modifier = Modifier .padding(10.dp),
     frpConfigs : MutableList<FrpConfig>
 ) {
     LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(10.dp)
-        ,
+        modifier = modifier.fillMaxSize(),
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
@@ -118,10 +114,12 @@ fun SettingsScreenContent(
             key = { x -> x.id }
         ) {
             if (it is FrpConfigC) {
-                FrpCPanel(
-                    onExpand = { it ->   },
-                    it
-                )
+                fccExtendCard(
+                    it,
+                    onExpand = {    },
+                ){ fconfig ->
+                    topShow(fc = fconfig);
+                }
             } else {
                 TODO("服务端")
             }
@@ -132,30 +130,6 @@ fun SettingsScreenContent(
 }
 
 
-@OptIn(ExperimentalLayoutApi::class)
-@Composable
-fun FrpCPanel(
-    onExpand: (String) -> Unit,
-    fc: FrpConfigC,
-) {
-    ExtendCard(
-        onExpand = {
-            onExpand("Focus Sessions")
-        },
-        name = fc.name,
-        icon = Icons.Outlined.HourglassEmpty,
-        content = {
-            FlowRow(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                maxItemsInEachRow = 5
-            ){
-                Text("路口撒旦放11")
-                 
-            }
-        },
-    )
-}
 @Deprecated("反射构造造成性能低下")
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -163,12 +137,11 @@ fun FrpCPanelReflect(
     onExpand: (String) -> Unit,
     fc: FrpConfigC,
 ) {
-    ExtendCard(
+    fccExtendCard(
+        fc,
         onExpand = {
             onExpand("Focus Sessions")
         },
-        name = fc.name,
-        icon = Icons.Outlined.HourglassEmpty,
         content = {
             //反射太慢
             val allpropertis  =  fc::class.memberProperties

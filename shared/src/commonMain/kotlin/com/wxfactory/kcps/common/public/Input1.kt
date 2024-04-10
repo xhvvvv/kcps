@@ -26,8 +26,10 @@ fun InputNo1(
     title: String,
     currentValue: String,
     onValueChange: (String) -> Unit,
+    type:String  = "string"
 ) {
     var fire by remember{ mutableStateOf(currentValue) }
+    var remid:String? by remember{ mutableStateOf(null) }
     BloomInputTextField(
         modifier = modifier,
         textStyle = MaterialTheme.typography.bodySmall.copy(
@@ -41,7 +43,7 @@ fun InputNo1(
                 ),
             )
         },
-        value = TextFieldState(fire),
+        value = TextFieldState(fire,remid),
         onValueChange = {
             onValueChange(it)
             fire = it

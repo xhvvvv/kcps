@@ -1,6 +1,7 @@
 package com.wxfactory.kcps.frpfun.entity.frpconfigcs;
 
 import com.wxfactory.kcps.frpfun.entity.FrpConfigC;
+import com.wxfactory.kcps.frpfun.entity.FrpcTypes;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,11 +15,12 @@ import lombok.Setter;
 public class StcpFcc extends FrpConfigC {
   
     private String localIP;
-    private String localPort;
+    private Integer localPort;
     private String secretKey;
     
     
     public StcpFcc(String host, int port) {
         super(host, port);
+        this.type = FrpcTypes.STCP.name();
     }
 }

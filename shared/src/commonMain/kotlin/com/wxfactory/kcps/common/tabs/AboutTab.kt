@@ -18,7 +18,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
-import com.wxfactory.kcps.common.public.ExtendCard
 import com.wxfactory.kcps.common.public.InputNo1
 import com.wxfactory.kcps.common.screen.data.ScreenViewModel
 import com.wxfactory.kcps.common.util.i18N

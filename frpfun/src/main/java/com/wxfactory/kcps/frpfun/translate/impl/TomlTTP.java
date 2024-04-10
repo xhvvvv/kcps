@@ -61,7 +61,7 @@ public class TomlTTP implements ToTypeProcessor<FrpConfigC> {
         
             if (StrUtil.isNotEmpty(vvvv .getServerName()))  sb.append("serverName = ")      .append("\"")       .append( vvvv .getServerName())         .append("\"\n");
             if (StrUtil.isNotEmpty(vvvv .getBindAddr()))    sb.append("bindAddr = ")        .append("\"")       .append( vvvv .getBindAddr())           .append("\"\n");
-            if (StrUtil.isNotEmpty(vvvv .getBindPort()))    sb.append("bindPort = ")        .append("\"")       .append( vvvv .getBindPort())           .append("\"\n");
+            if (StrUtil.isNotEmpty(String.valueOf(vvvv .getBindPort())))    sb.append("bindPort = ")        .append("\"")       .append( vvvv .getBindPort())           .append("\"\n");
             if (vvvv .getKeepTunnelOpen() != null )         sb.append("keepTunnelOpen = ")  .append("\"")       .append( vvvv .getKeepTunnelOpen())     .append("\"\n");
         
             if (StrUtil.isNotEmpty(vvvv .getLocalIP()))     sb.append("localIP = ")         .append("\"")       .append( vvvv .getLocalIP())            .append("\"\n");

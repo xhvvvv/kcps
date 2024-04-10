@@ -1,6 +1,7 @@
 package com.wxfactory.kcps.frpfun.entity.frpconfigcs;
 
 import com.wxfactory.kcps.frpfun.entity.FrpConfigC;
+import com.wxfactory.kcps.frpfun.entity.FrpcTypes;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,10 +18,11 @@ public class TcpFcc extends FrpConfigC {
     private Integer localPort;
     
     /**映射到frps的某一个端口*/
-    private String remotePort;
+    private Integer remotePort;
     
     
     public TcpFcc(String host, int port) {
         super(host, port);
+        this.type = FrpcTypes.TCP.name();
     }
 }

@@ -16,6 +16,8 @@ import com.wxfactory.kcps.common.Main
 import com.wxfactory.kcps.common.core.moudle.common
 import com.wxfactory.kcps.common.platform.moudleForPf
 import com.wxfactory.kcps.frpfun.entity.FrpConfig
+import com.wxfactory.kcps.frpfun.entity.frpconfigcs.TcpFcc
+import com.wxfactory.kcps.frpfun.entity.frpconfigcs.TcpmuxFcc
 import com.wxfactory.kcps.frpfun.entity.frpconfigcs.XtcpFcc
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -34,10 +36,23 @@ fun main() {
         )
     }.koin
     val fakes = koin.get<MutableList<FrpConfig>>(named("fcs"))
-    fakes.add(XtcpFcc("localhost",1212).apply { 
-        this.name="测试tcp"
-        this.type = "tcp"
-        this.bindAddr="localhost"
+    
+    repeat(4){ time ->
+        fakes.add(TcpFcc("localhost",time).apply {
+            this.name="测试$time"
+            this.localIP="localhost$time"
+        })
+    }
+    fakes.add(XtcpFcc("localhost",234).apply {
+        this.name="XTCP测试321"
+        this.localIP="localhost"
+    })
+    
+    fakes.add(TcpmuxFcc("localhost",234).apply {
+        this.name="XTCP测试321"
+        this.localIP="localhost"
+        this.multiplexer = "what"
+        this.customDomains = "wxfactory.com"
     })
     
     return application {
