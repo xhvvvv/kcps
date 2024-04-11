@@ -56,7 +56,8 @@ public class TomlTTP implements ToTypeProcessor<FrpConfigC> {
     private void handleSpecifyFcc(FrpConfigC frpConfigC , StringBuilder sb){
          if (frpConfigC instanceof XtcpFcc){
             XtcpFcc vvvv = ((XtcpFcc) frpConfigC);
-            sb.append("[[proxies]]").append("\n")
+            sb.append("" +
+                            "").append("\n")
                     .append("secretKey = ")   .append("\"")       .append( vvvv .getSecretKey())    .append("\"\n");
         
             if (StrUtil.isNotEmpty(vvvv .getServerName()))  sb.append("serverName = ")      .append("\"")       .append( vvvv .getServerName())         .append("\"\n");
