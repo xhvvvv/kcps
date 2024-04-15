@@ -28,6 +28,10 @@ public class FrpConfigC extends FrpConfig{
     @Getter
     @Setter(value = AccessLevel.NONE)
     protected String type;
+    /**本地设备ip*/
+    private String localIP;
+    private Integer localPort;
+
     private FrpConfigC pre;
     private FrpConfigC next;
     private static final Map<FrpcTypes,Class<? extends FrpConfigC>> mapperClass = new HashMap<>();

@@ -13,10 +13,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class TcpFcc extends FrpConfigC {
-    /**本地设备ip*/
-    private String localIP;
-    private Integer localPort;
-    
     /**映射到frps的某一个端口*/
     private Integer remotePort;
     

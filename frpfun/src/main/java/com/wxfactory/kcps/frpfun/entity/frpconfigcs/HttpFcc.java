@@ -8,9 +8,6 @@ import lombok.Setter;
 public class HttpFcc extends FrpConfigC {
  
     private String customDomains;
-    private Integer localPort;
-    
-    
     public HttpFcc(String host, int port) {
         super(host, port);
     }

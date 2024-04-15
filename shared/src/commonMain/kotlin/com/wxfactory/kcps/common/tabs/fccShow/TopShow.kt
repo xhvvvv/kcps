@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.wxfactory.kcps.common.core.entity.FrpConfigCCompose
 import com.wxfactory.kcps.common.public.CheckBox
 import com.wxfactory.kcps.common.public.InputNo1
 import com.wxfactory.kcps.common.util.i18N
@@ -20,7 +21,7 @@ import com.wxfactory.kcps.frpfun.entity.frpconfigcs.*
 @Composable
 fun topShow(
     modifier: Modifier = Modifier,
-    fc: FrpConfigC,
+    fc: FrpConfigCCompose<FrpConfigC>,
 ){
     FlowRow(
         modifier = modifier.fillMaxWidth(),
@@ -30,63 +31,63 @@ fun topShow(
         InputNo1(
             modifier = Modifier.width(200.dp),
             title = i18N.getProperty("cg-name"),
-            currentValue = fc.name,
+            currentValue = fc.fc.name,
             onValueChange = {
-                fc.name = it
+                fc.fc.name = it
             },
         )
 
         InputNo1(
             modifier = Modifier.width(200.dp),
             title = i18N.getProperty("cg-host"),
-            currentValue = fc.host,
+            currentValue = fc.fc.host,
             onValueChange = {
-                fc.host = it
+                fc.fc.host = it
             },
         )
 
         InputNo1(
             modifier = Modifier.width(200.dp),
             title = i18N.getProperty("cg-port"),
-            currentValue = fc.port.toString(),
+            currentValue = fc.fc.port.toString(),
             onValueChange = {
-                fc.port = it.toInt()
+                fc.fc.port = it.toInt()
             },
         )
 
 
-        when (fc) {
+        when (fc.fc) {
             is XtcpFcc -> {
                 InputNo1(
                     modifier = Modifier.width(200.dp),
                     title = i18N.getProperty("cg-serverName"),
-                    currentValue = fc.localIP?:"",
+                    currentValue = fc.fc.localIP?:"",
                     onValueChange = {
-                        fc.localIP = it
+                        fc.fc.localIP = it
                     },
                 )
                 InputNo1(
                     modifier = Modifier.width(200.dp),
                     title = i18N.getProperty("cg-secretKey"),
-                    currentValue = fc.localPort?.toString()?:"" ,
+                    currentValue = fc.fc.localPort?.toString()?:"" ,
                     onValueChange = {
-                        fc.localPort = it.toInt()
+                        fc.fc.localPort = it.toInt()
                     },
                 )
                 InputNo1(
                     modifier = Modifier.width(200.dp),
-                    title = i18N.getProperty("cg-bindAddr"),
-                    currentValue = fc.remotePort?.toString()?:"",
+                    title = i18N.getProperty("cg-localIP"),
+                    currentValue = fc.fc.remotePort?.toString()?:"",
                     onValueChange = {
-                        fc.remotePort = it.toInt()
+                        fc.fc.remotePort = it.toInt()
                     },
                 )
                 InputNo1(
                     modifier = Modifier.width(200.dp),
-                    title = i18N.getProperty("cg-bindPort"),
-                    currentValue = fc.bindPort?.toString()?:"",
+                    title = i18N.getProperty("cg-localPort"),
+                    currentValue = fc.fc.localPort?.toString()?:"",
                     onValueChange = {
-                        fc.bindPort = it.toInt()
+                        fc.fc.localPort = it.toInt()
                     },
                 )
                 CheckBox(
@@ -103,25 +104,25 @@ fun topShow(
                 InputNo1(
                     modifier = Modifier.width(200.dp),
                     title = i18N.getProperty("cg-localIP"),
-                    currentValue = fc.localIP.toString(),
+                    currentValue = fc.fc.localIP.toString(),
                     onValueChange = {
-                        fc.localIP = it
+                        fc.fc.localIP = it
                     },
                 )
                 InputNo1(
                     modifier = Modifier.width(200.dp),
                     title = i18N.getProperty("cg-localPort"),
-                    currentValue = fc.localPort.toString(),
+                    currentValue = fc.fc.localPort.toString(),
                     onValueChange = {
-                        fc.localPort = it.toInt()
+                        fc.fc.localPort = it.toInt()
                     },
                 )
                 InputNo1(
                     modifier = Modifier.width(200.dp),
                     title = i18N.getProperty("cg-secretKey"),
-                    currentValue = fc.secretKey?:"",
+                    currentValue = fc.fc.secretKey?:"",
                     onValueChange = {
-                        fc.secretKey = it
+                        fc.fc.secretKey = it
                     },
                 )
             }
@@ -129,33 +130,33 @@ fun topShow(
                 InputNo1(
                     modifier = Modifier.width(200.dp),
                     title = i18N.getProperty("cg-multiplexer"),
-                    currentValue = fc.multiplexer?:"",
+                    currentValue = fc.fc.multiplexer?:"",
                     onValueChange = {
-                        fc.multiplexer = it
+                        fc.fc.multiplexer = it
                     },
                 )
                 InputNo1(
                     modifier = Modifier.width(200.dp),
                     title = i18N.getProperty("cg-customDomains"),
-                    currentValue = fc.customDomains?:"",
+                    currentValue = fc.fc.customDomains?:"",
                     onValueChange = {
-                        fc.customDomains = it 
+                        fc.fc.customDomains = it 
                     },
                 )
                 InputNo1(
                     modifier = Modifier.width(200.dp),
                     title = i18N.getProperty("cg-localIP"),
-                    currentValue = fc.localIP?:"",
+                    currentValue = fc.fc.localIP?:"",
                     onValueChange = {
-                        fc.localIP = it
+                        fc.fc.localIP = it
                     },
                 )
                 InputNo1(
                     modifier = Modifier.width(200.dp),
                     title = i18N.getProperty("cg-localPort"),
-                    currentValue = fc.localPort?.toString()?:"" ,
+                    currentValue = fc.fc.localPort?.toString()?:"" ,
                     onValueChange = {
-                        fc.localPort = it.toInt()
+                        fc.fc.localPort = it.toInt()
                     },
                 )
             }
@@ -163,25 +164,25 @@ fun topShow(
                 InputNo1(
                     modifier = Modifier.width(200.dp),
                     title = i18N.getProperty("cg-localIP"),
-                    currentValue = fc.localIP?:"",
+                    currentValue = fc.fc.localIP?:"",
                     onValueChange = {
-                        fc.localIP = it
+                        fc.fc.localIP = it
                     },
                 )
                 InputNo1(
                     modifier = Modifier.width(200.dp),
                     title = i18N.getProperty("cg-localPort"),
-                    currentValue = fc.localPort?.toString()?:"" ,
+                    currentValue = fc.fc.localPort?.toString()?:"" ,
                     onValueChange = {
-                        fc.localPort = it.toInt()
+                        fc.fc.localPort = it.toInt()
                     },
                 )
                 InputNo1(
                     modifier = Modifier.width(200.dp),
                     title = i18N.getProperty("cg-remotePort"),
-                    currentValue = fc.remotePort?.toString()?:"" ,
+                    currentValue = fc.fc.remotePort?.toString()?:"" ,
                     onValueChange = {
-                        fc.remotePort = it.toInt()
+                        fc.fc.remotePort = it.toInt()
                     },
                 )
             }
@@ -189,25 +190,25 @@ fun topShow(
                 InputNo1(
                     modifier = Modifier.width(200.dp),
                     title = i18N.getProperty("cg-localIP"),
-                    currentValue = fc.localIP.toString(),
+                    currentValue = fc.fc.localIP.toString(),
                     onValueChange = {
-                        fc.localIP = it
+                        fc.fc.localIP = it
                     },
                 )
                 InputNo1(
                     modifier = Modifier.width(200.dp),
                     title = i18N.getProperty("cg-localPort"),
-                    currentValue = fc.localPort?.toString()?:"" ,
+                    currentValue = fc.fc.localPort?.toString()?:"" ,
                     onValueChange = {
-                        fc.localPort = it.toInt()
+                        fc.fc.localPort = it.toInt()
                     },
                 )
                 InputNo1(
                     modifier = Modifier.width(200.dp),
                     title = i18N.getProperty("cg-remotePort"),
-                    currentValue = fc.remotePort?.toString()?:"" ,
+                    currentValue = fc.fc.remotePort?.toString()?:"" ,
                     onValueChange = {
-                        fc.remotePort = it.toInt()
+                        fc.fc.remotePort = it.toInt()
                     },
                 )
             }

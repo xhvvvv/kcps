@@ -33,7 +33,7 @@ public abstract class FrpConfig implements Serializable {
     
     protected void generateId(){
         Snowflake snowflake = new Snowflake(1, 1);
-        this.id = String.valueOf(snowflake.nextId())+this.hashCode();
+        this.id = String.valueOf(snowflake.nextId());
     }
     public FrpConfig(@NotNull String host,@NotNull Integer port) {
         this.host = host;

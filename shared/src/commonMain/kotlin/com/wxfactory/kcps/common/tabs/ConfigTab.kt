@@ -7,10 +7,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.HourglassEmpty
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,8 +23,10 @@ import cafe.adriel.voyager.navigator.bottomSheet.BottomSheetNavigator
 import cafe.adriel.voyager.navigator.bottomSheet.LocalBottomSheetNavigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
+import com.wxfactory.kcps.common.core.entity.FrpConfigCCompose
 import com.wxfactory.kcps.common.public.*
 import com.wxfactory.kcps.common.screen.data.ScreenViewModel
+import com.wxfactory.kcps.common.screen.theme.PrimaryTextColor
 import com.wxfactory.kcps.common.tabs.fccShow.topShow
 import com.wxfactory.kcps.common.util.i18N
 import com.wxfactory.kcps.frpfun.entity.FrpConfig
@@ -44,7 +46,7 @@ class ConfigTab() : Tab{
         @Composable
         get() {
             val title = "Home"
-            val imageVector = rememberVectorPainter( Icons.Outlined.Home)
+            val imageVector = rememberVectorPainter(Icons.Outlined.Home)
             return TabOptions(
                 index = 0u,
                 title = title,
@@ -63,15 +65,72 @@ class ConfigTab() : Tab{
 @Composable
 fun SettingsScreen(
     mainViewModel: ScreenViewModel = koinInject<ScreenViewModel>(),
-    fcs: MutableList<FrpConfig> =   koinInject<MutableList<FrpConfig>>(named("fcs")),
+    fcs: MutableList<FrpConfigCCompose<FrpConfigC>> =   koinInject<MutableList<FrpConfigCCompose<FrpConfigC>>>(named("fcs")),
 ) {
     val stateFcs = remember { fcs.toMutableStateList() }
+    var explandAll by remember { mutableStateOf(0) }
     BottomSheetNavigator {
         Scaffold(
             bottomBar = {
                 BottomAppBar(
                     actions = {
-
+                        
+                        Row(
+                        ) {
+                            IconButton(
+                                colors = IconButtonDefaults.iconButtonColors(
+                                    containerColor  = Color(0xFF79747E),
+                                ),
+                                onClick = {
+                                     
+                                }
+                            ) {
+                                Icon(
+                                    painter =  rememberVectorPainter(image = Icons.Outlined.Cancel),
+                                    contentDescription = "关闭全部",
+                                    tint = Color(0xFFFEF7FF)
+                                )
+                            }
+                            
+                            Spacer(modifier = Modifier.width(10.dp))
+                            IconButton(
+                                colors = IconButtonDefaults.iconButtonColors(
+                                    containerColor  = Color(0xFF6750A4),
+                                ),
+                                onClick = {
+                                    fcs.forEach{
+                                        it.expend = true;
+                                    }
+                                    explandAll++
+                                }
+                            ) {
+                                Icon(
+                                    painter =  rememberVectorPainter(image = Icons.Outlined.UnfoldMore),
+                                    contentDescription = "展开",
+                                    tint = Color.Black
+                                )
+                            }
+                            
+                            Spacer(modifier = Modifier.width(10.dp))
+                            IconButton(
+                                colors = IconButtonDefaults.iconButtonColors(
+                                    containerColor  =Color(0xFF6750A4),
+                                ),
+                                onClick = {
+                                    fcs.forEach{
+                                        it.expend = false;
+                                    }
+                                    explandAll++
+                                }
+                            ) {
+                                Icon(
+                                    painter =  rememberVectorPainter(image = Icons.Outlined.UnfoldLess),
+                                    contentDescription = "收起",
+                                    tint = Color.Black
+                                )
+                            }
+                           
+                        }
                     },
                     floatingActionButton = {
                         val bottomSheetNavigator = LocalBottomSheetNavigator.current
@@ -80,7 +139,7 @@ fun SettingsScreen(
                                 bottomSheetNavigator.show( 
                                     AddPanel(stateFcs){ tfc -> 
                                         it.hide() 
-                                        fcs.add(tfc)
+                                        fcs.add(FrpConfigCCompose(tfc))
                                     } 
                                 )
                             },
@@ -93,7 +152,7 @@ fun SettingsScreen(
                 )
             },
         ) { innerPadding ->
-            SettingsScreenContent(modifier=Modifier.padding(innerPadding), stateFcs)
+            SettingsScreenContent(modifier=Modifier.padding(innerPadding), stateFcs  ,explandAll)
         }
     }
    
@@ -101,34 +160,29 @@ fun SettingsScreen(
 @Composable
 fun SettingsScreenContent(
     modifier : Modifier = Modifier .padding(10.dp),
-    frpConfigs : MutableList<FrpConfig>
+    frpConfigs : MutableList<FrpConfigCCompose<FrpConfigC>>,
+    explandAll : Int // 状态化的变量int，手动引起列表的状态刷新
 ) {
     LazyColumn(
         modifier = modifier.fillMaxSize(),
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        println("shit")
         this.items(
             items = frpConfigs ,
-            key = { x -> x.id }
+            key = { x -> (x.fc.id )}
         ) {
-            if (it is FrpConfigC) {
-                fccExtendCard(
-                    it,
-                    onExpand = {    },
-                ){ fconfig ->
-                    topShow(fc = fconfig);
-                }
-            } else {
-                TODO("服务端")
+            fccExtendCard(
+                it,
+                onExpand = { },
+            ){ fconfig ->
+                topShow(fc = fconfig);
             }
         }
-
     }
-
 }
 
+/*
 
 @Deprecated("反射构造造成性能低下")
 @OptIn(ExperimentalLayoutApi::class)
@@ -172,4 +226,4 @@ fun FrpCPanelReflect(
             }
         },
     )
-}
+}*/

@@ -1,6 +1,7 @@
 package com.wxfactory.kcps.frpfun.translate;
 
 import com.wxfactory.kcps.frpfun.entity.FrpConfig;
+import com.wxfactory.kcps.frpfun.entity.FrpConfigC;
 
 /**
  * 此接口用于将面板配置转换成各种不同格式的配置文件
@@ -16,4 +17,6 @@ public interface ToTypeProcessor<T extends FrpConfig> {
      * @return
      */
     String transfer(T t);
+    String handleHead(T t);
+    void handleSpecifyFcc(T t , StringBuilder sb);
 }

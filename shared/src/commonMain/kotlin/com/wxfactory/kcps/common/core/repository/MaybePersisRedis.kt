@@ -1,10 +1,6 @@
 package com.wxfactory.kcps.common.core.repository
 import com.russhwolf.settings.ObservableSettings
-import com.russhwolf.settings.coroutines.getBooleanFlow
-import com.russhwolf.settings.coroutines.getIntFlow
-import com.russhwolf.settings.coroutines.getIntOrNullFlow
-import com.russhwolf.settings.coroutines.getLongFlow
-import com.russhwolf.settings.coroutines.getStringOrNullFlow
+import com.russhwolf.settings.coroutines.*
 import com.russhwolf.settings.set
 import kotlinx.coroutines.flow.Flow
 
@@ -20,6 +16,7 @@ class MaybePersisRedis constructor(private val observableSettings: ObservableSet
         const val SHORT_BREAK_TIME = "short_break_time_key"
         const val LONG_BREAK_TIME = "long_break_time_key"
         const val HOUR_FORMAT = "hour_format_key"
+        const val EXE_LOCATION = "exeLocation"
     }
     fun setString(key: String, value: String) {
         observableSettings.set(key = key, value = value)

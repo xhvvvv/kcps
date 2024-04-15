@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.Flow
 interface SettingService {
     suspend fun saveAppTheme(theme: Int)
     fun getAppTheme(): Flow<Int?>
+    fun getExeLocation(): String?
     fun clearAll()
     fun getSessionTime(): Flow<Int?>
     fun getShortBreakTime(): Flow<Int?>

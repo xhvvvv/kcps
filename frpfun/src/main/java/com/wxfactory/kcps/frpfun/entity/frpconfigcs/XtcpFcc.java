@@ -10,8 +10,6 @@ public class XtcpFcc extends TcpFcc {
   
     private String serverName;
     private String secretKey;
-    private String bindAddr;
-    private Integer bindPort;
     private Boolean keepTunnelOpen;
     
     public XtcpFcc(String host, int port) {

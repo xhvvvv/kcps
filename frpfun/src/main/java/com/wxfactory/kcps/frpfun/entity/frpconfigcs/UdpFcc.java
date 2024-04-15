@@ -8,9 +8,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UdpFcc extends FrpConfigC {
-   
-    private String localIP;
-    private Integer localPort;
     private Integer remotePort;
     
     

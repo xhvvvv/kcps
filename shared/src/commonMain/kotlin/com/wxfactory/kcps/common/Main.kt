@@ -44,7 +44,7 @@ fun Main(
         ) {
             //主界面，这里只有一个界面
             Navigator(
-                screen =  ConfigPanel(items = koinInject(named("tabs")) ),
+                screen =  ConfigPanel(items = koinInject(named("tabs"))),
             )
             
         }

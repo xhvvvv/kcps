@@ -16,8 +16,6 @@ public class TcpmuxFcc extends FrpConfigC {
  
     private String multiplexer;
     private String customDomains;
-    private String localIP;
-    private Integer localPort;
     
     
     public TcpmuxFcc(String host, int port) {

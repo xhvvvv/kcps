@@ -1,4 +1,4 @@
-package com.wxfactory.kcps.frpfun.frpBash;
+package com.wxfactory.kcps.frpfun.frpBash.bash;
 
 import java.io.File;
 import java.io.IOException;

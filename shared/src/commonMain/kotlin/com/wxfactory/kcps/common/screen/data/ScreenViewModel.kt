@@ -3,9 +3,7 @@ package com.wxfactory.kcps.common.screen.data
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import com.wxfactory.kcps.common.core.repository.SettingService
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.*
 
 class ScreenViewModel(
     settingsRepository: SettingService,
@@ -17,7 +15,6 @@ class ScreenViewModel(
         started = SharingStarted.WhileSubscribed(), //通知策略，表示必须有一个订阅才会开始发送
         initialValue = null,
     )
- 
-    
+    val exeFile : MutableStateFlow<String>  = MutableStateFlow<String>( settingsRepository.getExeLocation()?:"" )
     
 }

@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
+import com.wxfactory.kcps.common.core.entity.FrpConfigCCompose
 import com.wxfactory.kcps.common.public.InputNo1
 import com.wxfactory.kcps.common.public.Select
 import com.wxfactory.kcps.common.public.TextFieldState
@@ -30,7 +31,7 @@ private data class Address(val ip:String,val port:Int? ,val kind:Int,val fc:FrpC
  
 }
 class AddPanel(
-    val fcs:MutableList<FrpConfig>,
+    val fcs: MutableList<FrpConfigCCompose<FrpConfigC>>,
     val doneCallBack : (tfc: FrpConfigC) -> Unit
 ) : Screen {
     @Composable
@@ -43,7 +44,7 @@ class AddPanel(
             derivedStateOf {
                 val thisList: MutableList<Address> = mutableListOf()
                 fcs.mapTo(thisList){ 
-                    x-> Address(x.host,x.port,1,x)
+                    x-> Address(x.fc.host,x.fc.port,1,x.fc)
                 }
                 thisList.add(Address(ip="自定义",port = null, kind = 2 , null))
                 thisList.distinctBy { x-> "${x.ip}:${x.port}"}
@@ -70,7 +71,6 @@ class AddPanel(
                                 }
                                 tfc.name = name
                                 doneCallBack(tfc)
-                                fcs.add(tfc)
                             }
                         ) {
                             Text("添加")

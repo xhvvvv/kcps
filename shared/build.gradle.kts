@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "com.wxfactroy"
-version = "0.0.1"
+version = "0.0.2"
 //
 kotlin {
     jvm {
@@ -48,9 +48,10 @@ kotlin {
 //                implementation(compose.preview)
                 implementation(compose.runtime)
                 implementation(compose.runtimeSaveable)
-                
                 //提供一些额外的图标
                 implementation(compose.materialIconsExtended)
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.7.3")
                 /** Koin */
                 api(platform("io.insert-koin:koin-bom:3.5.3"))
                 api("io.insert-koin:koin-core")

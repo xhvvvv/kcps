@@ -11,6 +11,10 @@ class SettingServiceImpl(private val maybePersisRedis:MaybePersisRedis):SettingS
         return maybePersisRedis.getInt(key = MaybePersisRedis.APP_THEME)
     }
 
+    override fun getExeLocation(): String? {
+        return ""
+    }
+
     override fun clearAll() {
         TODO("Not yet implemented")
     }

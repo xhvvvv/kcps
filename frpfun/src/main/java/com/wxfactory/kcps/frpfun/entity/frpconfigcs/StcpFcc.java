@@ -14,8 +14,6 @@ import lombok.Setter;
 @Setter
 public class StcpFcc extends FrpConfigC {
   
-    private String localIP;
-    private Integer localPort;
     private String secretKey;
     
     

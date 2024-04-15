@@ -9,8 +9,8 @@ dependencies{
     compileOnly("org.projectlombok:lombok:1.18.30")
     annotationProcessor("org.projectlombok:lombok:1.18.30")
     api("cn.hutool:hutool-all:5.8.26")
-    implementation("org.jetbrains:annotations:24.1.0")
-
+    implementation("org.jetbrains:annotations:23.0.0")
+    api("org.apache.commons:commons-exec:1.4.0")
 //    testImplementation("org.junit.jupiter:junit-jupiter:5.7.1")
 //    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     
