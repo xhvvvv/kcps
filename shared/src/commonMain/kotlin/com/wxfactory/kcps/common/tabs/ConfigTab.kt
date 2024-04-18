@@ -35,6 +35,7 @@ import com.wxfactory.kcps.frpfun.entity.FrpcTypes
 import com.wxfactory.kcps.frpfun.entity.frpconfigcs.TcpFcc
 import org.koin.compose.koinInject
 import org.koin.core.qualifier.named
+import org.koin.java.KoinJavaComponent
 import java.util.*
 import kotlin.reflect.KMutableProperty
 import kotlin.reflect.full.memberProperties
@@ -67,7 +68,7 @@ fun SettingsScreen(
     mainViewModel: ScreenViewModel = koinInject<ScreenViewModel>(),
     fcs: MutableList<FrpConfigCCompose<FrpConfigC>> =   koinInject<MutableList<FrpConfigCCompose<FrpConfigC>>>(named("fcs")),
 ) {
-    val stateFcs = remember { fcs.toMutableStateList() }
+    val stateFcs = remember(fcs) { fcs.toMutableStateList() }
     var explandAll by remember { mutableStateOf(0) }
     BottomSheetNavigator {
         Scaffold(
@@ -140,6 +141,7 @@ fun SettingsScreen(
                                     AddPanel(stateFcs){ tfc -> 
                                         it.hide() 
                                         fcs.add(FrpConfigCCompose(tfc))
+                                        stateFcs.add(FrpConfigCCompose(tfc))
                                     } 
                                 )
                             },
@@ -152,7 +154,11 @@ fun SettingsScreen(
                 )
             },
         ) { innerPadding ->
-            SettingsScreenContent(modifier=Modifier.padding(innerPadding), stateFcs  ,explandAll)
+            SettingsScreenContent(modifier=Modifier.padding(innerPadding), stateFcs  ,explandAll){
+                fcs.remove(it)
+                mainViewModel.fcs.remove(it.fc)
+                stateFcs.remove(it)
+            }
         }
     }
    
@@ -161,7 +167,8 @@ fun SettingsScreen(
 fun SettingsScreenContent(
     modifier : Modifier = Modifier .padding(10.dp),
     frpConfigs : MutableList<FrpConfigCCompose<FrpConfigC>>,
-    explandAll : Int // 状态化的变量int，手动引起列表的状态刷新
+    explandAll : Int, // 状态化的变量int，手动引起列表的状态刷新
+    removeFc : (FrpConfigCCompose<FrpConfigC>) ->Unit,
 ) {
     LazyColumn(
         modifier = modifier.fillMaxSize(),
@@ -175,6 +182,7 @@ fun SettingsScreenContent(
             fccExtendCard(
                 it,
                 onExpand = { },
+                removeFc =removeFc
             ){ fconfig ->
                 topShow(fc = fconfig);
             }

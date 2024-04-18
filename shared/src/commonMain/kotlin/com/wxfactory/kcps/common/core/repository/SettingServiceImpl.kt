@@ -12,7 +12,23 @@ class SettingServiceImpl(private val maybePersisRedis:MaybePersisRedis):SettingS
     }
 
     override fun getExeLocation(): String? {
-        return ""
+        return maybePersisRedis.getNonFlowString(key = MaybePersisRedis.EXE_LOCATION)
+    }
+
+    override fun saveExeLocation(file:String?) {
+        file?.let {
+            maybePersisRedis.setString( MaybePersisRedis.EXE_LOCATION , file )
+        }
+    }
+
+    override fun getFccTypes(): Flow<String?> {
+        return maybePersisRedis.getString(key = MaybePersisRedis.EXE_CONFIG_TYPE)
+    }
+
+    override fun saveFccTypes(type: String?) {
+        type?.let {
+            maybePersisRedis.setString( MaybePersisRedis.EXE_CONFIG_TYPE , type )
+        }
     }
 
     override fun clearAll() {

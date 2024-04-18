@@ -2,6 +2,7 @@ package com.wxfactory.kcps.frpfun.frpBash;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.exec.ExecuteResultHandler;
 
 import java.io.File;
 import java.util.List;

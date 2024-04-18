@@ -15,11 +15,12 @@ import com.wxfactory.kcps.common.public.TextFieldState
 import com.wxfactory.kcps.frpfun.entity.FrpConfig
 import com.wxfactory.kcps.frpfun.entity.FrpConfigC
 import com.wxfactory.kcps.frpfun.entity.FrpcTypes
+import com.wxfactory.kcps.frpfun.entity.auths.MethodType
+import com.wxfactory.kcps.frpfun.entity.auths.TokenAuth
 import com.wxfactory.kcps.frpfun.entity.frpconfigcs.TcpFcc
 
 /**kind 2自定义的*/
 private data class Address(val ip:String,val port:Int? ,val kind:Int,val fc:FrpConfig?) {
-    
     override fun toString(): String {
         if (port==null){
             return "$ip"
@@ -27,8 +28,6 @@ private data class Address(val ip:String,val port:Int? ,val kind:Int,val fc:FrpC
             return "$ip:$port"
         }
     }
-
- 
 }
 class AddPanel(
     val fcs: MutableList<FrpConfigCCompose<FrpConfigC>>,
@@ -51,6 +50,14 @@ class AddPanel(
             }
         }
         var chosedAddress:Address  by remember { mutableStateOf(allServer.first()) }
+       
+        val authType by remember{
+            derivedStateOf {
+                MethodType.values().toList()
+            }
+        }
+        var chosedAuthType by remember { mutableStateOf(authType[0]) }
+        var token   by remember { mutableStateOf("") }
         Scaffold(
             modifier = Modifier.fillMaxHeight(0.5f) ,
             bottomBar = {
@@ -62,7 +69,6 @@ class AddPanel(
                     ){
                         FilledTonalButton(
                             onClick = {
-                                
                                 val tfc: FrpConfigC  
                                 if(chosedAddress.kind == 2 ){
                                     tfc = TcpFcc(ip,port.toInt())
@@ -70,6 +76,7 @@ class AddPanel(
                                     tfc = (chosedAddress.fc as FrpConfigC).newMyFccWithType(FrpcTypes.valueOf(chosed))
                                 }
                                 tfc.name = name
+                                tfc.authentication = TokenAuth(chosedAuthType,token)
                                 doneCallBack(tfc)
                             }
                         ) {
@@ -80,7 +87,7 @@ class AddPanel(
             }
         ){
                 Card( 
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize().padding(10.dp)
                 ){
                     Row  {
                         Select<FrpcTypes>(
@@ -139,6 +146,35 @@ class AddPanel(
                                     port = it
                                 },
                             )
+                        }
+                    }
+                    Row {
+                        Select<MethodType>(
+                            modifier = Modifier.fillMaxWidth(0.3f),
+                            options = authType,
+                            selectedOption = TextFieldState(chosedAuthType.name,null),
+                            onOptionSelected = { type -> chosedAuthType = type }
+                        ){
+                            Text(
+                                style = MaterialTheme.typography.labelLarge.copy(
+                                    fontWeight = FontWeight.SemiBold,
+                                )
+                                ,text = "认证方式"
+                            )
+                        }
+                        
+                        when(chosedAuthType){
+                            MethodType.TOKEN ->{
+                                InputNo1(
+                                    modifier = Modifier.fillMaxWidth(0.7f),
+                                    title = "密匙",
+                                    currentValue = token,
+                                    onValueChange = {
+                                        token = it
+                                    },
+                                )
+                            }
+                            MethodType.OIDC -> TODO()
                         }
                     }
                 }

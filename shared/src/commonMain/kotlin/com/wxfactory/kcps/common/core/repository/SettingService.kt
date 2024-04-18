@@ -1,5 +1,6 @@
 package com.wxfactory.kcps.common.core.repository
 
+import com.wxfactory.kcps.frpfun.translate.ConfigTypes
 import kotlinx.coroutines.flow.Flow
 
 
@@ -10,6 +11,12 @@ interface SettingService {
     suspend fun saveAppTheme(theme: Int)
     fun getAppTheme(): Flow<Int?>
     fun getExeLocation(): String?
+    fun saveExeLocation(file:String?)
+
+    fun getFccTypes(): Flow<String?>
+    fun saveFccTypes(file:String?)
+
+
     fun clearAll()
     fun getSessionTime(): Flow<Int?>
     fun getShortBreakTime(): Flow<Int?>

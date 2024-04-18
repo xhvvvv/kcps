@@ -38,29 +38,29 @@ fun main() {
                 ),
             )
         }.koin
-        val fakes = koin.get<MutableList<FrpConfigCCompose<FrpConfigC>>>(named("fcs"))
+//        val fakes = koin.get<MutableList<FrpConfigCCompose<FrpConfigC>>>(named("fcs"))
 
-        repeat(4) { time ->
-            delay(500)
-            fakes.add(FrpConfigCCompose(TcpFcc("localhost", time).apply {
-                this.name = "测试$time"
-                this.localIP = "localhost$time"
-                this.localPort = time
-            }))
-        }
-        delay(500)
-        fakes.add(FrpConfigCCompose(XtcpFcc("localhost", 234).apply {
-            this.name = "XTCP测试321"
-            this.localIP = "localhost"
-            this.localPort = 993
-        }))
-        delay(500)
-        fakes.add(FrpConfigCCompose(TcpmuxFcc("localhost", 234).apply {
-            this.name = "XTCP测试321"
-            this.localIP = "localhost"
-            this.multiplexer = "what"
-            this.customDomains = "wxfactory.com"
-        }))
+//        repeat(4) { time ->
+//            delay(500)
+//            fakes.add(FrpConfigCCompose(TcpFcc("localhost", time).apply {
+//                this.name = "测试$time"
+//                this.localIP = "localhost$time"
+//                this.localPort = time
+//            }))
+//        }
+//        delay(500)
+//        fakes.add(FrpConfigCCompose(XtcpFcc("localhost", 234).apply {
+//            this.name = "XTCP测试321"
+//            this.localIP = "localhost"
+//            this.localPort = 993
+//        }))
+//        delay(500)
+//        fakes.add(FrpConfigCCompose(TcpmuxFcc("localhost", 234).apply {
+//            this.name = "XTCP测试321"
+//            this.localIP = "localhost"
+//            this.multiplexer = "what"
+//            this.customDomains = "wxfactory.com"
+//        }))
 
         application {
             Window(

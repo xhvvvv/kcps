@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "com.wxfactroy"
-version = "0.0.2"
+version = "0.1.0"
 //
 kotlin {
     jvm {
@@ -48,10 +48,13 @@ kotlin {
 //                implementation(compose.preview)
                 implementation(compose.runtime)
                 implementation(compose.runtimeSaveable)
+//                implementation(compose.components)
                 //提供一些额外的图标
                 implementation(compose.materialIconsExtended)
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.7.3")
+                /*compose lifecycle*/
+//                api("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
                 /** Koin */
                 api(platform("io.insert-koin:koin-bom:3.5.3"))
                 api("io.insert-koin:koin-core")
@@ -70,10 +73,9 @@ kotlin {
                 implementation("cafe.adriel.voyager:voyager-bottom-sheet-navigator:$voyagerVersion")
                 // TabNavigator
                 implementation("cafe.adriel.voyager:voyager-tab-navigator:$voyagerVersion")
-                
-                
                 //依赖frp包
                 api(project(":frpfun"))
+               
 
                 api(kotlin("reflect"))
             }

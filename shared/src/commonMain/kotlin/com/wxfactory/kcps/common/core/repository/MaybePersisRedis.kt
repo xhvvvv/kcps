@@ -17,11 +17,11 @@ class MaybePersisRedis constructor(private val observableSettings: ObservableSet
         const val LONG_BREAK_TIME = "long_break_time_key"
         const val HOUR_FORMAT = "hour_format_key"
         const val EXE_LOCATION = "exeLocation"
-    }
+        const val EXE_CONFIG_TYPE = "INI"
+    } 
     fun setString(key: String, value: String) {
         observableSettings.set(key = key, value = value)
     }
-
     fun getNonFlowString(key: String) = observableSettings.getString(
         key = key,
         defaultValue = "",

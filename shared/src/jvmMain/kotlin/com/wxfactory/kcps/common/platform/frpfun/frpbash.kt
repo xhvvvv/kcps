@@ -1,18 +1,37 @@
 package com.wxfactory.kcps.common.platform.frpfun
 
 import com.wxfactory.kcps.common.core.entity.FrpConfigCCompose
+import com.wxfactory.kcps.common.screen.data.ScreenViewModel
 import com.wxfactory.kcps.frpfun.Fc2Start
-import com.wxfactory.kcps.frpfun.entity.FrpConfig
+import com.wxfactory.kcps.frpfun.entity.FrpConfigC
+import com.wxfactory.kcps.frpfun.frpBash.bash.ExpandExecuteResultHandler
 import com.wxfactory.kcps.frpfun.frpBash.entity.ExcuteCon
+import com.wxfactory.kcps.frpfun.translate.ConfigTypes
+import org.apache.commons.exec.ExecuteException
+import org.koin.java.KoinJavaComponent.get
 
 
 /**
  * 启动配置
  */
-actual fun startFrp(frp: FrpConfigCCompose<FrpConfig>): ExcuteCon {
-    
-//    Fc2Start.start( frp.fc , mutableMapOf(
-//        Pair()
-//    ) )
-    return ExcuteCon(null);
+actual fun startFrpC( frp: FrpConfigCCompose<FrpConfigC> ): ExcuteCon {
+    val mainViewModel: ScreenViewModel = get(ScreenViewModel::class.java)
+    val con:ExcuteCon  = Fc2Start.start( 
+        frp.fc  ,
+        mutableMapOf<String , Any>(
+            Pair(Fc2Start.EXE_LOCATION, mainViewModel.exeFile as Any),
+            Pair(Fc2Start.EXE_CONFIG_TYPE, ConfigTypes.valueOf(mainViewModel.confType.value?:ConfigTypes.INI.name) as Any),
+            Pair(Fc2Start.EXE_CALLBACK, ExpandExecuteResultHandler{ exitV: Int?, ex: ExecuteException? ->
+                ex?.let { 
+                    
+                }
+                exitV?.let { 
+                    
+                }
+                /*总之就是退出了*/
+                frp.exeCallBack()
+            })
+        ) 
+    )
+    return con;
 }

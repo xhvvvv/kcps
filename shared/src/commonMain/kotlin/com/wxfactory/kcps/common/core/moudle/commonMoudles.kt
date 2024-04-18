@@ -15,6 +15,7 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import org.koin.dsl.single
+import org.koin.java.KoinJavaComponent.inject
 
 val tables = module {
     single<List<Tab>>(named("tabs")) {
@@ -34,7 +35,10 @@ val data = module {
 val frp = module {
     //全局frpc配置列表
     single<MutableList<FrpConfigCCompose<FrpConfigC>>> (named("fcs")) {
-        mutableListOf()
+        val screenViewModel : ScreenViewModel = get()
+        screenViewModel.fcs.map {
+            FrpConfigCCompose(it)
+        }.toMutableList()
     }
 }
 

@@ -7,5 +7,4 @@ package com.wxfactory.kcps.frpfun.translate;
 public enum ConfigTypes {
     //格式必须和文件后缀一致
     TOML,JSON,INI
-     
 }

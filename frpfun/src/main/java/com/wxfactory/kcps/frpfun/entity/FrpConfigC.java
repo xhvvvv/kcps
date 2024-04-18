@@ -1,6 +1,7 @@
 package com.wxfactory.kcps.frpfun.entity;
 
 
+import com.alibaba.fastjson2.annotation.JSONField;
 import com.wxfactory.kcps.frpfun.entity.frpconfigcs.FileFcc;
 import com.wxfactory.kcps.frpfun.entity.frpconfigcs.HttpFcc;
 import com.wxfactory.kcps.frpfun.entity.frpconfigcs.StcpFcc;

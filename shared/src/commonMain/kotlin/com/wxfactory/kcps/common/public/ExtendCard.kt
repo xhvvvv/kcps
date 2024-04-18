@@ -14,20 +14,33 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.wxfactory.kcps.common.core.entity.FrpConfigCCompose
-import com.wxfactory.kcps.common.platform.frpfun.startFrp
+import com.wxfactory.kcps.common.platform.frpfun.startFrpC
 import com.wxfactory.kcps.frpfun.entity.FrpConfigC
+import com.wxfactory.kcps.frpfun.frpBash.entity.ExcuteCon
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun fccExtendCard(
     fc: FrpConfigCCompose<FrpConfigC>,
     modifier: Modifier = Modifier,
+    removeFc : (FrpConfigCCompose<FrpConfigC>) ->Unit,
     onExpand: () -> Unit, //切换展开时的调用
     content: @Composable ( fc: FrpConfigCCompose<FrpConfigC> ) -> Unit,
 ) {
+    val run = rememberCoroutineScope()
     var ifExpend : Boolean  by  mutableStateOf(fc.expend)
     var opend : Boolean by mutableStateOf(fc.ifrunnig ) 
-    var ifRunOnly : Boolean by mutableStateOf(fc.ifrunnig ) 
+    var ifRunOnly : Boolean by mutableStateOf(fc.ifrunOnly ) 
+    var loadding : Boolean by remember { mutableStateOf(false )} 
+    LaunchedEffect(Unit){
+        //注册回调
+        fc.exeCallBack = {
+            opend = false
+        }
+    }
+    
     Card(
         modifier = modifier,
         onClick = {
@@ -165,7 +178,7 @@ fun fccExtendCard(
                                      containerColor  = Color(0xFFFFD8E4),
                                  ),
                                  onClick = {
-                
+                                     removeFc(fc)
                                  }
                              ) {
                                  Icon(
@@ -174,18 +187,34 @@ fun fccExtendCard(
                                  )
                              }
                              Spacer(Modifier.width(16.dp))
-                             Switch(
-                                 checked = opend,
-                                 onCheckedChange = {
-                                     fc.ifrunnig = it
-                                    
-//                                     LaunchedEffect(it){
-//                                         startFrp(fc)
-//                                     }
-                                     
-                                     opend = it
-                                 }
-                             )
+                             if(loadding){
+                                 Icon(
+                                     imageVector = Icons.Outlined.Sync,
+                                     contentDescription = "正在加载中",
+                                 )
+                             }else{
+                                 Switch(
+                                     checked = opend,
+                                     onCheckedChange = {
+                                         loadding = true
+                                         run.launch {
+                                             fc.ifrunnig = it
+                                             if(it){
+                                                 //开启
+                                                 val ec : ExcuteCon = startFrpC(fc)
+                                                 fc.ec = ec
+                                                 opend = true
+                                             }else{
+                                                 //关闭
+                                                 fc.ec?.executeWatchdog?.destroyProcess()
+                                                 opend = false
+                                             }
+                                             loadding = false
+                                         }
+                                     }
+                                 )
+                             }
+                             
                              Spacer(Modifier.width(16.dp))
                              // 下拉按钮
                              IconButton(onClick = {
