@@ -12,11 +12,10 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class StcpFcc extends FrpConfigC {
-  
+public class StcpFcc extends TcpFcc {
+    private String side ;
     private String secretKey;
-    
-    
+    private String serverName;
     public StcpFcc(String host, int port) {
         super(host, port);
         this.type = FrpcTypes.STCP.name();

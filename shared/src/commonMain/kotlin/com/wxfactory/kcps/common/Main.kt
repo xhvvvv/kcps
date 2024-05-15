@@ -34,9 +34,6 @@ fun Main(
         1 -> true
         else -> false
     }
-    val allTabs = remember {  }
-//    //表示指定koin上下文，默认也是GlobalContext，感觉要不要都无所谓
-//    KoinContext{}
     val autoColors = if (darkTheme) DarkColors else LightColors
     
     MaterialTheme(
@@ -58,7 +55,6 @@ fun Main(
     DisposableEffect(Unit) {
         //保存数据
         onDispose {
-            println("保存")
             val mff  by inject<MutableList<FrpConfigCCompose<FrpConfigC>>> (MutableList::class.java,named("fcs"))
             val fccs = mff.map { it.fc }
             mainViewModel.save(fccs)

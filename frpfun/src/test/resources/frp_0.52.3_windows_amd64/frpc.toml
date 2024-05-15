@@ -1,0 +1,11 @@
+serverAddr = "47.101.205.184"
+serverPort = 11098
+auth.method = "token"
+auth.token = "e8fxAAG34IS7KbhT0Z6ia1TEjTq6kxasb"
+ 
+[[proxies]]
+name = "test-tcp"
+type = "tcp"
+localIP = "127.0.0.1"
+localPort = 9889
+remotePort = 12059

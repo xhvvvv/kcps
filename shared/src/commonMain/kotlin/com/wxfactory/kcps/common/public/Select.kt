@@ -17,19 +17,23 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.wxfactory.kcps.common.public.validate.ValidataeObject
 
 @Composable
 fun <T> Select(
     modifier: Modifier = Modifier,
     options: List<T>,
+    primarySelect : T = options[0],
+    onOptionSelected: (T)->Unit,
     enabled: Boolean = true,
-    selectedOption: TextFieldState,
-    onOptionSelected: (T) -> Unit,
+    selectedOptionShow: (T)->String = { it.toString() },
+    optionSelectedShow: (T)->String = { it.toString() },
     textStyle: TextStyle = MaterialTheme.typography.titleSmall,
     shape: CornerBasedShape = MaterialTheme.shapes.small,
     label: (@Composable () -> Unit)? = null,
 ) {
     var expanded by remember { mutableStateOf(false) }
+    var chosedT by remember { mutableStateOf<T>(primarySelect) }
     Column {
         if (label != null) {
             label()
@@ -38,7 +42,6 @@ fun <T> Select(
         Box(
             modifier = modifier
                 .height(56.dp)
-//                 .menuAnchor()
                 .border(
                     width = 1.dp,
                     color = if (enabled) {
@@ -67,7 +70,7 @@ fun <T> Select(
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text(
-                    text = selectedOption.text,
+                    text = selectedOptionShow(chosedT),
                     style = textStyle,
                 )
                 if (enabled) {
@@ -93,11 +96,12 @@ fun <T> Select(
                     DropdownMenuItem(
                         text = {
                             Text(
-                                text = selectionOption.toString(),
+                                text = optionSelectedShow(selectionOption),
                                 style = MaterialTheme.typography.labelLarge,
                             )
                         },
                         onClick = {
+                            chosedT = selectionOption
                             onOptionSelected(selectionOption)
                             expanded = false
                         },
@@ -106,7 +110,7 @@ fun <T> Select(
             }
         }
 
-        selectedOption.error?.let {
+        /*selectedOption.error?.let {
             Text(
                 modifier = Modifier.fillMaxWidth(),
                 text = it,
@@ -114,6 +118,6 @@ fun <T> Select(
                 color = MaterialTheme.colorScheme.error,
                 textAlign = TextAlign.End,
             )
-        }
+        }*/
     }
 }

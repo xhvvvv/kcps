@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class XtcpFcc extends TcpFcc {
-  
+    private String side ;
     private String serverName;
     private String secretKey;
     private Boolean keepTunnelOpen;

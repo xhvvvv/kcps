@@ -1,10 +1,11 @@
 plugins {
     kotlin("multiplatform")
     id("org.jetbrains.compose")
+    kotlin("plugin.serialization")
 }
 
 group = "com.wxfactroy"
-version = "0.1.0"
+version = "1.0.0"
 //
 kotlin {
     jvm {
@@ -39,20 +40,21 @@ kotlin {
 
     
     sourceSets {
+        
         val commonMain by getting {
             
             dependencies{
-                implementation(compose.foundation)
-                implementation(compose.material)
-                implementation(compose.material3)
-//                implementation(compose.preview)
-                implementation(compose.runtime)
-                implementation(compose.runtimeSaveable)
+                api(compose.foundation)
+                api(compose.material)
+                api(compose.material3)
+                api(compose.preview)
+                api(compose.runtime)
+                api(compose.runtimeSaveable)
 //                implementation(compose.components)
                 //提供一些额外的图标
-                implementation(compose.materialIconsExtended)
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.7.3")
+                api(compose.materialIconsExtended)
+                api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+                api("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.7.3")
                 /*compose lifecycle*/
 //                api("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
                 /** Koin */
@@ -63,21 +65,26 @@ kotlin {
                 /** settings */
                 api("com.russhwolf:multiplatform-settings-no-arg:1.1.1")
                 api("com.russhwolf:multiplatform-settings-coroutines:1.1.1")
+                api("com.russhwolf:multiplatform-settings-serialization:1.1.1")
                 
                 /** voyager */
                 val voyagerVersion = "1.0.0"
-                implementation("cafe.adriel.voyager:voyager-navigator:$voyagerVersion")
+                api("cafe.adriel.voyager:voyager-navigator:$voyagerVersion")
                 // Screen Model
-                implementation("cafe.adriel.voyager:voyager-screenmodel:$voyagerVersion")
+                api("cafe.adriel.voyager:voyager-screenmodel:$voyagerVersion")
                 // BottomSheetNavigator
-                implementation("cafe.adriel.voyager:voyager-bottom-sheet-navigator:$voyagerVersion")
+                api("cafe.adriel.voyager:voyager-bottom-sheet-navigator:$voyagerVersion")
                 // TabNavigator
-                implementation("cafe.adriel.voyager:voyager-tab-navigator:$voyagerVersion")
+                api("cafe.adriel.voyager:voyager-tab-navigator:$voyagerVersion")
                 //依赖frp包
                 api(project(":frpfun"))
-               
+                
+                //验证包
+                api("commons-validator:commons-validator:1.8.0")
 
                 api(kotlin("reflect"))
+
+                api("org.jetbrains.kotlinx:kotlinx-serialization-core:1.6.3")
             }
             
         }
@@ -86,7 +93,9 @@ kotlin {
                 implementation(kotlin("test"))
             }
         }
-        val jvmMain by getting
+        val jvmMain by getting {
+            
+        }
         val jvmTest by getting
 //        val jsMain by getting
 //        val jsTest by getting

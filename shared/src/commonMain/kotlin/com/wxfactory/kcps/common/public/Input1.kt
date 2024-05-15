@@ -8,13 +8,14 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.wxfactory.kcps.common.public.validate.ValidataeObject
+import com.wxfactory.kcps.common.public.validate.Validator
 
 /**
  * 配置Frp页使用的输入框
@@ -22,14 +23,30 @@ import androidx.compose.ui.unit.sp
  */
 @Composable
 fun InputNo1(
+    id : String? = null , //校验的唯一标识
     modifier: Modifier = Modifier,
     title: String,
+    type : KeyboardType = KeyboardType.Text,
     currentValue: String,
     onValueChange: (String) -> Unit,
-    type:String  = "string"
+    editable : Boolean = true
 ) {
-    var fire by remember{ mutableStateOf(currentValue) }
-    var remid:String? by remember{ mutableStateOf(null) }
+    val formState = LocalFormState.current
+    val date = remember {  ValidataeObject(currentValue)  }
+    
+    LaunchedEffect(Unit){
+        //注册校验者
+        id?.let{
+            formState.regiest(id,date)
+        }
+    }
+    DisposableEffect(Unit){
+        //去除校验者
+        onDispose {
+            formState.unRegiest(id)
+        }
+    }
+    
     BloomInputTextField(
         modifier = modifier,
         textStyle = MaterialTheme.typography.bodySmall.copy(
@@ -43,14 +60,15 @@ fun InputNo1(
                 ),
             )
         },
-        value = TextFieldState(fire,remid),
+        value = date,
         onValueChange = {
-            onValueChange(it)
-            fire = it
+            val con =if (id!=null) formState.virfySingle(id) else true
+            if (con){
+                onValueChange(it)
+            }
         },
-        keyboardOptions = KeyboardOptions.Default.copy(
-            keyboardType = KeyboardType.Number,
-        ),
+        keyboardOptions = KeyboardOptions( keyboardType = type),
+        editable =editable
     )
 }
 
@@ -62,7 +80,7 @@ internal fun BloomInputTextField(
     placeholder: (@Composable () -> Unit)? = null,
     leadingIcon: (@Composable () -> Unit)? = null,
     trailingIcon: (@Composable () -> Unit)? = null,
-    value: TextFieldState,
+    value: ValidataeObject,
     maxLines: Int = 1,
     editable: Boolean = true,
     onValueChange: (String) -> Unit,
@@ -80,8 +98,11 @@ internal fun BloomInputTextField(
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth()
                 .defaultMinSize(minWidth = 40.dp),
-            value = value.text,
-            onValueChange = onValueChange,
+            value = value.value?:"",
+            onValueChange = {
+                value.value = it
+                onValueChange(it)
+            },
             placeholder = placeholder,
             leadingIcon = leadingIcon,
             trailingIcon = trailingIcon,
@@ -91,21 +112,15 @@ internal fun BloomInputTextField(
             singleLine = maxLines == 1,
             keyboardOptions = keyboardOptions,
             readOnly = !editable,
+            isError = value.error !=null
         )
         //校验提示信息
         value.error?.let {
             Text(
                 text = it,
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    color = MaterialTheme.colorScheme.error,
-                ),
+                style = MaterialTheme.typography.labelSmall.copy(color = Color.Red),
             )
         }
     }
 }
 
-
-data class TextFieldState(
-    var text: String = "",
-    var error: String? = null,
-)

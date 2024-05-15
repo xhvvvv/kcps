@@ -16,11 +16,12 @@ import org.koin.java.KoinJavaComponent.get
  */
 actual fun startFrpC( frp: FrpConfigCCompose<FrpConfigC> ): ExcuteCon {
     val mainViewModel: ScreenViewModel = get(ScreenViewModel::class.java)
+    frp.exeStartCallBack()
     val con:ExcuteCon  = Fc2Start.start( 
         frp.fc  ,
         mutableMapOf<String , Any>(
             Pair(Fc2Start.EXE_LOCATION, mainViewModel.exeFile as Any),
-            Pair(Fc2Start.EXE_CONFIG_TYPE, ConfigTypes.valueOf(mainViewModel.confType.value?:ConfigTypes.INI.name) as Any),
+            Pair(Fc2Start.EXE_CONFIG_TYPE, ConfigTypes.valueOf(mainViewModel.confType.value?:ConfigTypes.TOML.name) as Any),
             Pair(Fc2Start.EXE_CALLBACK, ExpandExecuteResultHandler{ exitV: Int?, ex: ExecuteException? ->
                 ex?.let { 
                     
@@ -30,8 +31,19 @@ actual fun startFrpC( frp: FrpConfigCCompose<FrpConfigC> ): ExcuteCon {
                 }
                 /*总之就是退出了*/
                 frp.exeCallBack()
+                frp.ec = null
+                frp.ifrunnig.value = false
             })
         ) 
     )
+    frp.ec = con
     return con;
+}
+actual fun stopFrpC( frp: FrpConfigCCompose<FrpConfigC> ) {
+    frp.ec?.let {
+        //关闭
+        it?.executeWatchdog?.destroyProcess()
+    }
+    frp.exeCallBack()
+    frp.ec = null
 }

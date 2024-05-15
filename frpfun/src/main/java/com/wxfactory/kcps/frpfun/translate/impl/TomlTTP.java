@@ -85,24 +85,46 @@ public class TomlTTP implements ToTypeProcessor<FrpConfigC> {
     public void handleSpecifyFcc(FrpConfigC frpConfigC , StringBuilder sb){
          if (frpConfigC instanceof XtcpFcc){
             XtcpFcc vvvv = ((XtcpFcc) frpConfigC);
-            sb.append("\n").append("secretKey = ")   .append("\"")       .append( vvvv .getSecretKey())    .append("\"\n");
-        
-            if ( StrUtil.isNotEmpty(vvvv .getServerName())                )       sb.append(" serverName = "     )        .append("\"")           .append( vvvv .getServerName())         .append("\"\n") ;
-            if ( StrUtil.isNotEmpty(vvvv .getLocalIP())                   )       sb.append(" bindAddr = "       )        .append("\"")           .append( vvvv .getLocalIP())            .append("\"\n") ;
-            if ( StrUtil.isNotEmpty(String.valueOf(vvvv .getLocalPort())) )       sb.append(" bindPort = "       )        .append("  ")           .append( vvvv .getLocalPort())          .append("  \n") ;
-            if ( vvvv .getKeepTunnelOpen() != null                        )       sb.append(" keepTunnelOpen = " )        .append("\"")           .append( vvvv .getKeepTunnelOpen())     .append("\"\n") ;
-            if ( StrUtil.isNotEmpty(vvvv .getLocalIP())                   )       sb.append(" localIP = "        )        .append("\"")           .append( vvvv .getLocalIP())            .append("\"\n") ;
-            if ( vvvv .getLocalPort() !=null                              )       sb.append(" localPort = "      )        .append("  ")           .append( vvvv .getLocalPort())          .append("  \n") ;
-        
+             if (TcpFcc.W_S_C.equals(vvvv.getSide())){//客户端
+                 sb.append("[[visitors]]").append("\n");
+                 sb.append( "bindAddr = "       )       .append("\"")       .append( vvvv.getLocalIP())     .append("\"\n");
+                 sb.append( "bindPort = "     )         .append("  ")       .append( vvvv.getLocalPort())   .append("  \n");
+                 sb.append(" keepTunnelOpen = " )        .append("\"")           .append( vvvv .getKeepTunnelOpen())     .append("\"\n") ;
+                 sb.append(" serverName = "     )        .append("\"")           .append( vvvv .getServerName())         .append("\"\n") ;
+                 
+             }else{
+                 sb.append("[[proxies]]").append("\n");
+                 sb.append(" localIP = "        )        .append("\"")           .append( vvvv .getLocalIP())            .append("\"\n") ;
+                 sb.append(" localPort = "      )        .append("  ")           .append( vvvv .getLocalPort())          .append("  \n") ;
+             }
+             sb.append( "secretKey  = "       )       .append("\"")       .append( vvvv.getSecretKey())     .append("\"\n");
         }else if (frpConfigC instanceof TcpmuxFcc) {
              
         }else if (frpConfigC instanceof StcpFcc) {
-             
+             StcpFcc vvvv = ((StcpFcc) frpConfigC);
+             if (TcpFcc.W_S_C.equals(vvvv.getSide())){//客户端
+                 sb.append("[[visitors]]").append("\n");
+                 sb.append( "bindAddr = "       )       .append("\"")       .append( vvvv.getLocalIP())     .append("\"\n");
+                 sb.append( "bindPort = "       )       .append("  ")         .append( vvvv.getLocalPort())   .append("  \n");
+                 sb.append(" serverName = "     )        .append("\"")     .append( vvvv .getServerName())         .append("\"\n") ;
+             }else{
+                 sb.append("[[proxies]]").append("\n");
+                 sb.append( "localIP = "       )       .append("\"")       .append( vvvv.getLocalIP())     .append("\"\n");
+                 sb.append( "localPort = "     )       .append("  ")       .append( vvvv.getLocalPort())   .append("  \n");
+             }
+             sb.append( "secretKey  = "       )       .append("\"")       .append( vvvv.getSecretKey())     .append("\"\n");
         }else if (frpConfigC instanceof HttpFcc) {
-             
+             HttpFcc vvvv = ((HttpFcc) frpConfigC);
+             sb.append("[[proxies]]").append("\n")
+                     .append( "localPort = "     )       .append("  ")       .append( vvvv.getLocalPort())                           .append("  \n")
+                     .append( "customDomains = "    )    .append("  ")       .append( vvvv.getCustomDomains().toArray().toString())  .append("  \n");
              
         }else if (frpConfigC instanceof UdpFcc) {
-             
+             UdpFcc vvvv = ((UdpFcc) frpConfigC);
+             sb.append("[[proxies]]").append("\n")
+                     .append( "localIP = "       )       .append("\"")       .append( vvvv.getLocalIP())     .append("\"\n")
+                     .append( "localPort = "     )       .append("  ")       .append( vvvv.getLocalPort())   .append("  \n")
+                     .append( "remotePort = "    )       .append("  ")       .append( vvvv.getRemotePort())  .append("  \n");
         }else if (frpConfigC instanceof TcpFcc) {// TCP转换
             TcpFcc vvvv = ((TcpFcc) frpConfigC);
             sb.append("[[proxies]]").append("\n")

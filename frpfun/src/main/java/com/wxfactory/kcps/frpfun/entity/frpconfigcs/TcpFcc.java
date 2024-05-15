@@ -16,7 +16,6 @@ public class TcpFcc extends FrpConfigC {
     /**映射到frps的某一个端口*/
     private Integer remotePort;
     
-    
     public TcpFcc(String host, int port) {
         super(host, port);
         this.type = FrpcTypes.TCP.name();

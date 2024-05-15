@@ -10,3 +10,4 @@ import com.wxfactory.kcps.frpfun.frpBash.entity.ExcuteCon
  * 启动配置
  */
 expect fun startFrpC(frp: FrpConfigCCompose<FrpConfigC>) : ExcuteCon
+expect fun stopFrpC(frp: FrpConfigCCompose<FrpConfigC>) : Unit

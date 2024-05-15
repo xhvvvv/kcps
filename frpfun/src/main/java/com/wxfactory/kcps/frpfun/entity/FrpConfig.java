@@ -1,6 +1,7 @@
 package com.wxfactory.kcps.frpfun.entity;
 
 import cn.hutool.core.lang.Snowflake;
+import com.alibaba.fastjson2.annotation.JSONField;
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
@@ -26,9 +27,11 @@ public abstract class FrpConfig implements Serializable {
     /** 表示公网的地址 */
     protected String host;
     protected Integer port;
-    
+    /** 是否自启--这个状态不好放，暂且放在这个类中 */
+    protected boolean enabled;
     /** 认证方式 */
     @Nullable
+    @JSONField(deserialize = false)
     protected Authentication authentication;
     
     protected void generateId(){

@@ -18,13 +18,18 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.core.model.screenModelScope
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.bottomSheet.BottomSheetNavigator
 import cafe.adriel.voyager.navigator.bottomSheet.LocalBottomSheetNavigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.wxfactory.kcps.common.core.entity.FrpConfigCCompose
+import com.wxfactory.kcps.common.platform.frpfun.startFrpC
+import com.wxfactory.kcps.common.platform.frpfun.stopFrpC
 import com.wxfactory.kcps.common.public.*
+import com.wxfactory.kcps.common.public.validate.intValidator
+import com.wxfactory.kcps.common.public.validate.nnullValidator
 import com.wxfactory.kcps.common.screen.data.ScreenViewModel
 import com.wxfactory.kcps.common.screen.theme.PrimaryTextColor
 import com.wxfactory.kcps.common.tabs.fccShow.topShow
@@ -33,6 +38,9 @@ import com.wxfactory.kcps.frpfun.entity.FrpConfig
 import com.wxfactory.kcps.frpfun.entity.FrpConfigC
 import com.wxfactory.kcps.frpfun.entity.FrpcTypes
 import com.wxfactory.kcps.frpfun.entity.frpconfigcs.TcpFcc
+import com.wxfactory.kcps.frpfun.frpBash.entity.ExcuteCon
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import org.koin.core.qualifier.named
 import org.koin.java.KoinJavaComponent
@@ -69,13 +77,15 @@ fun SettingsScreen(
     fcs: MutableList<FrpConfigCCompose<FrpConfigC>> =   koinInject<MutableList<FrpConfigCCompose<FrpConfigC>>>(named("fcs")),
 ) {
     val stateFcs = remember(fcs) { fcs.toMutableStateList() }
-    var explandAll by remember { mutableStateOf(0) }
     BottomSheetNavigator {
+        val snackbarHostState = remember { SnackbarHostState() }
         Scaffold(
+            snackbarHost = {
+                SnackbarHost(hostState = snackbarHostState)
+            },
             bottomBar = {
                 BottomAppBar(
                     actions = {
-                        
                         Row(
                         ) {
                             IconButton(
@@ -83,7 +93,11 @@ fun SettingsScreen(
                                     containerColor  = Color(0xFF79747E),
                                 ),
                                 onClick = {
-                                     
+                                    mainViewModel.screenModelScope.launch { 
+                                        fcs.forEach {
+                                            stopFrpC(it)
+                                        }
+                                    }
                                 }
                             ) {
                                 Icon(
@@ -100,9 +114,8 @@ fun SettingsScreen(
                                 ),
                                 onClick = {
                                     fcs.forEach{
-                                        it.expend = true;
+                                        it.expend.value = true
                                     }
-                                    explandAll++
                                 }
                             ) {
                                 Icon(
@@ -119,9 +132,8 @@ fun SettingsScreen(
                                 ),
                                 onClick = {
                                     fcs.forEach{
-                                        it.expend = false;
+                                        it.expend.value = false
                                     }
-                                    explandAll++
                                 }
                             ) {
                                 Icon(
@@ -148,15 +160,28 @@ fun SettingsScreen(
                             containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
                             elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
                         ) {
-                            Icon(Icons.Filled.Add, "Localized description")
+                            Icon(Icons.Filled.Add, "添加配置")
                         }
                     }
                 )
             },
         ) { innerPadding ->
-            SettingsScreenContent(modifier=Modifier.padding(innerPadding), stateFcs  ,explandAll){
+            SettingsScreenContent(
+                modifier=Modifier.padding(innerPadding), 
+                stateFcs ,
+                alert = {
+                    mainViewModel.screenModelScope.launch {
+                        mainViewModel.screenModelScope.launch {
+                            snackbarHostState.showSnackbar( it  )
+                        }
+                        mainViewModel.screenModelScope.launch {
+                            delay(1000)
+                            snackbarHostState.currentSnackbarData?.dismiss()
+                        }
+                    }
+                }
+            ){
                 fcs.remove(it)
-                mainViewModel.fcs.remove(it.fc)
                 stateFcs.remove(it)
             }
         }
@@ -167,7 +192,7 @@ fun SettingsScreen(
 fun SettingsScreenContent(
     modifier : Modifier = Modifier .padding(10.dp),
     frpConfigs : MutableList<FrpConfigCCompose<FrpConfigC>>,
-    explandAll : Int, // 状态化的变量int，手动引起列表的状态刷新
+    alert : (String) -> Unit, //提醒框
     removeFc : (FrpConfigCCompose<FrpConfigC>) ->Unit,
 ) {
     LazyColumn(
@@ -179,12 +204,43 @@ fun SettingsScreenContent(
             items = frpConfigs ,
             key = { x -> (x.fc.id )}
         ) {
-            fccExtendCard(
-                it,
-                onExpand = { },
-                removeFc =removeFc
-            ){ fconfig ->
-                topShow(fc = fconfig);
+            var disableSwitch by remember { mutableStateOf(true) }
+            var disabledSwitch = { con : Boolean -> disableSwitch = con }
+            Form {
+                val formState = LocalFormState.current
+                LaunchedEffect(Unit) {
+                    //注册校验器
+                    formState {
+                        "name" useValidator nnullValidator
+                        "host" useValidator nnullValidator
+                        "port" useValidators listOf(
+                            nnullValidator, intValidator
+                        )
+
+//                "localIP" useValidators listOf(
+//                    nnullValidator,intValidator
+//                ) 
+                        "localPort" useValidators listOf(
+                            nnullValidator, intValidator
+                        )
+
+                        "remotePort" useValidators listOf(
+                            nnullValidator, intValidator
+                        )
+
+                        "serverName" useValidator nnullValidator
+                        "secretKey" useValidator nnullValidator
+                    }
+                }
+                fccExtendCard(
+                    it,
+                    onExpand = { },
+                    removeFc = removeFc,
+                    alert = alert
+                ) { fconfig ->
+                    // 下展开的栏目
+                    topShow(fc = fconfig);
+                }
             }
         }
     }

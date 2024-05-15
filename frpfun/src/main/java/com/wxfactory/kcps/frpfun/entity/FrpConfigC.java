@@ -24,7 +24,11 @@ import java.util.Map;
  */
 @Getter
 @Setter
-public class FrpConfigC extends FrpConfig{
+public abstract class FrpConfigC extends FrpConfig{
+    /**有些配置可能需要设置客户端还是服务端*/
+    public static final String W_S_C = "C";
+    public static final String W_S_S = "S";
+    
     /**连接类型*/
     @Getter
     @Setter(value = AccessLevel.NONE)
@@ -35,7 +39,7 @@ public class FrpConfigC extends FrpConfig{
 
     private FrpConfigC pre;
     private FrpConfigC next;
-    private static final Map<FrpcTypes,Class<? extends FrpConfigC>> mapperClass = new HashMap<>();
+    public static final Map<FrpcTypes,Class<? extends FrpConfigC>> mapperClass = new HashMap<>();
     static {
         mapperClass.put(FrpcTypes.HTTP, HttpFcc.class);
         mapperClass.put(FrpcTypes.STCP, StcpFcc.class);

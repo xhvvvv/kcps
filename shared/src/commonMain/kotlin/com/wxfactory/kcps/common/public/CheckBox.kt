@@ -22,9 +22,12 @@ import androidx.compose.ui.unit.dp
 fun  CheckBox(
     modifier: Modifier = Modifier,
     shape: CornerBasedShape = MaterialTheme.shapes.small,
-    label: (@Composable () -> Unit)? = null,
+    currentValue: Boolean,
+    onValueChange: (Boolean) -> Unit,
+    editable : Boolean = true,
+    label: (@Composable () -> Unit)? = null
 ) {
-    var chosed by remember { mutableStateOf(false) }
+    var chosed by remember { mutableStateOf(currentValue) }
     Column {
         if (label != null) {
             label()
@@ -51,7 +54,9 @@ fun  CheckBox(
                     checked = chosed,
                     onCheckedChange = {
                         chosed = it
-                    }
+                        onValueChange(it)
+                    },
+                    enabled = editable 
                 )
             }
             

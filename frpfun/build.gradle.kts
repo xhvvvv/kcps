@@ -14,8 +14,8 @@ dependencies{
 //    testImplementation("org.junit.jupiter:junit-jupiter:5.7.1")
 //    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     api("com.alibaba.fastjson2:fastjson2:2.0.49")
-    testImplementation(platform("org.junit:junit-bom:5.10.2-SNAPSHOT"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
+//    testImplementation(platform("org.junit:junit-bom:5.10.2-SNAPSHOT"))
+//    testImplementation("org.junit.jupiter:junit-jupiter")
 }
 repositories{
         maven(url = "https://oss.sonatype.org/content/repositories/snapshots")
