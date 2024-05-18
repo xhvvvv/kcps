@@ -68,7 +68,7 @@ fun main() {
                 title = "kcps",
                 state = rememberWindowState(
                     position = WindowPosition.Aligned(Alignment.Center),
-                    width = 1200.dp,
+                    width = 1100.dp,
                     height = 700.dp,
                 ),
             ) {

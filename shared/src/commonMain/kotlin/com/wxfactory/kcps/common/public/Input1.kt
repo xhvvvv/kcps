@@ -28,7 +28,7 @@ fun InputNo1(
     title: String,
     type : KeyboardType = KeyboardType.Text,
     currentValue: String,
-    onValueChange: (String) -> Unit,
+    onValueChange: (String?) -> Unit,
     editable : Boolean = true
 ) {
     val formState = LocalFormState.current
@@ -65,6 +65,8 @@ fun InputNo1(
             val con =if (id!=null) formState.virfySingle(id) else true
             if (con){
                 onValueChange(it)
+            }else{
+                onValueChange(null)
             }
         },
         keyboardOptions = KeyboardOptions( keyboardType = type),
@@ -83,7 +85,7 @@ internal fun BloomInputTextField(
     value: ValidataeObject,
     maxLines: Int = 1,
     editable: Boolean = true,
-    onValueChange: (String) -> Unit,
+    onValueChange: (String?) -> Unit,
     textStyle: TextStyle = MaterialTheme.typography.titleSmall,
     shape: CornerBasedShape = MaterialTheme.shapes.small,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
