@@ -1,8 +1,6 @@
 package com.wxfactory.kcps.frpfun.entity;
 
 
-import com.alibaba.fastjson2.annotation.JSONField;
-import com.wxfactory.kcps.frpfun.entity.frpconfigcs.FileFcc;
 import com.wxfactory.kcps.frpfun.entity.frpconfigcs.HttpFcc;
 import com.wxfactory.kcps.frpfun.entity.frpconfigcs.StcpFcc;
 import com.wxfactory.kcps.frpfun.entity.frpconfigcs.TcpFcc;
@@ -13,7 +11,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.Map;
 

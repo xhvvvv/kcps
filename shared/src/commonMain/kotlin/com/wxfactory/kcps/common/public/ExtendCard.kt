@@ -40,7 +40,7 @@ fun fccExtendCard(
     val run = rememberCoroutineScope()
     var ifRunOnly : Boolean by mutableStateOf(fc.ifrunOnly ) 
     var loadding : Boolean by remember { mutableStateOf(false )}
-    var enabled : Boolean by remember { mutableStateOf(fc.fc.isEnabled )}
+    var enabled : Boolean by remember { mutableStateOf(fc.fc.enabled )}
     val formState = LocalFormState.current
     LaunchedEffect(Unit){
         //注册回调
@@ -76,7 +76,7 @@ fun fccExtendCard(
                                 contentDescription = "配置名称",
                             )
                             Text(
-                                text = fc.fc.name,
+                                text = fc.fc.name?:"",
                                 style = MaterialTheme.typography.titleSmall,
                             )
                         }
@@ -188,13 +188,13 @@ fun fccExtendCard(
                                     Column  {
                                         Text(
 //                                            modifier = Modifier.fillMaxWidth(),
-                                            text = "${fc.fc.host}",
+                                            text = fc.fc.host?:"",
                                             style = MaterialTheme.typography.titleSmall,
                                             textAlign = TextAlign.Center
                                         )
                                         Text(
 //                                            modifier = Modifier.fillMaxWidth(),
-                                            text = "${fc.fc.port}",
+                                            text = fc.fc.port?.toString()?:"",
                                             style = MaterialTheme.typography.titleSmall,
                                             textAlign = TextAlign.Center
                                         )
@@ -297,7 +297,7 @@ fun fccExtendCard(
                                      checked = enabled,
                                      enabled = true,
                                      onCheckedChange = {
-                                         fc.fc.isEnabled = it
+                                         fc.fc.enabled = it
                                          enabled = it
                                      }
                                  )
