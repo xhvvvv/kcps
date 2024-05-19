@@ -143,7 +143,7 @@ class AddPanel(
                             type = KeyboardType.Text,
                             currentValue = name,
                             onValueChange = {
-                                name = it
+                                name = it?:""
                             },
                         )
 
@@ -185,9 +185,9 @@ class AddPanel(
                                 modifier = Modifier.fillMaxWidth(0.3f),
                                 title = "公网host",
                                 type = KeyboardType.Text,
-                                currentValue = ip,
+                                currentValue = ip ,
                                 onValueChange = {
-                                    ip = it
+                                    ip = it?:""
                                 },
                             )
                             InputNo1(
@@ -197,7 +197,7 @@ class AddPanel(
                                 type = KeyboardType.Number,
                                 currentValue = port,
                                 onValueChange = {
-                                    port = it
+                                    port = it?:""
                                 },
                             )
                         }
@@ -225,7 +225,7 @@ class AddPanel(
                                     type = KeyboardType.Password,
                                     currentValue = token,
                                     onValueChange = {
-                                        token = it
+                                        token = it?:""
                                     },
                                 )
                             }

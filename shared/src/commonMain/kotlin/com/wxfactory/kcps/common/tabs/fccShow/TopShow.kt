@@ -40,9 +40,9 @@ fun topShow(
             modifier = Modifier.width(200.dp),
             title = i18N.getProperty("cg-name"),
             type = KeyboardType.Text,
-            currentValue = fc.fc.name,
+            currentValue = fc.fc.name?:"",
             onValueChange = {
-                fc.fc.name = it
+                fc.fc.name = it?: ""
             },
             editable = fc.ifrunnig.value.not()
         )
@@ -52,9 +52,9 @@ fun topShow(
             modifier = Modifier.width(200.dp),
             title = i18N.getProperty("cg-host"),
             type = KeyboardType.Text,
-            currentValue = fc.fc.host,
+            currentValue = fc.fc.host?:"",
             onValueChange = {
-                fc.fc.host = it
+                fc.fc.host = it?: ""
             },
             editable = fc.ifrunnig.value.not()
         )
@@ -64,9 +64,9 @@ fun topShow(
             modifier = Modifier.width(200.dp),
             title = i18N.getProperty("cg-port"),
             type = KeyboardType.Number,
-            currentValue = fc.fc.port.toString(),
+            currentValue = fc.fc.port?.toString()?:"",
             onValueChange = {
-                fc.fc.port = it.toInt()
+                fc.fc.port = it?.toInt()
             },
             editable = fc.ifrunnig.value.not()
         )
@@ -81,7 +81,7 @@ fun topShow(
                         title = i18N.getProperty("cg-serverName"),
                         currentValue = fc.fc.serverName?.toString() ?: "",
                         onValueChange = {
-                            fc.fc.serverName = it
+                            fc.fc.serverName = it?: ""
                         },
                         editable = fc.ifrunnig.value.not()
                     )
@@ -93,7 +93,7 @@ fun topShow(
                     type = KeyboardType.Number,
                     currentValue =  fc.fc.secretKey?.toString() ?: "",
                     onValueChange = {
-                        fc.fc.secretKey = it
+                        fc.fc.secretKey = it?: ""
                     },
                     editable = fc.ifrunnig.value.not()
                 )
@@ -103,7 +103,7 @@ fun topShow(
                     title = i18N.getProperty("cg-localIP"),
                     currentValue = fc.fc.localIP?.toString() ?: "",
                     onValueChange = {
-                        fc.fc.localIP = it
+                        fc.fc.localIP = it?: ""
                     },
                     editable = fc.ifrunnig.value.not()
                 )
@@ -114,7 +114,7 @@ fun topShow(
                     type = KeyboardType.Number,
                     currentValue = fc.fc.localPort?.toString() ?: "",
                     onValueChange = {
-                        fc.fc.localPort = it.toInt()
+                        fc.fc.localPort = it?.toInt()
                     },
                     editable = fc.ifrunnig.value.not()
                 )
@@ -144,7 +144,7 @@ fun topShow(
                         title = i18N.getProperty("cg-serverName"),
                         currentValue = fc.fc.serverName?.toString() ?: "",
                         onValueChange = {
-                            fc.fc.serverName = it
+                            fc.fc.serverName = it?: ""
                         },
                         editable = fc.ifrunnig.value.not()
                     )
@@ -155,7 +155,7 @@ fun topShow(
                     title = i18N.getProperty("cg-localIP"),
                     currentValue = fc.fc.localIP ?: "",
                     onValueChange = {
-                        fc.fc.localIP = it
+                        fc.fc.localIP = it?: ""
                     },
                     editable = fc.ifrunnig.value.not()
                 )
@@ -166,7 +166,7 @@ fun topShow(
                     type = KeyboardType.Number,
                     currentValue = fc.fc.localPort?.toString() ?: "",
                     onValueChange = {
-                        fc.fc.localPort = it.toInt()
+                        fc.fc.localPort = it?.toInt()
                     },
                     editable = fc.ifrunnig.value.not()
                 )
@@ -177,7 +177,7 @@ fun topShow(
                     type = KeyboardType.Password,
                     currentValue =  fc.fc.secretKey?.toString() ?: "",
                     onValueChange = {
-                        fc.fc.secretKey = it
+                        fc.fc.secretKey = it?: ""
                     },
                     editable = fc.ifrunnig.value.not()
                 )
@@ -198,7 +198,7 @@ fun topShow(
                     title = i18N.getProperty("cg-customDomains"),
                     currentValue = fc.fc.customDomains ?: "",
                     onValueChange = {
-                        fc.fc.customDomains = it
+                        fc.fc.customDomains = it?: ""
                     },
                     editable = fc.ifrunnig.value.not()
                 )
@@ -207,7 +207,7 @@ fun topShow(
                     title = i18N.getProperty("cg-localIP"),
                     currentValue = fc.fc.localIP ?: "",
                     onValueChange = {
-                        fc.fc.localIP = it
+                        fc.fc.localIP = it?: ""
                     },
                     editable = fc.ifrunnig.value.not()
                 )
@@ -217,7 +217,7 @@ fun topShow(
                     type = KeyboardType.Number,
                     currentValue = fc.fc.localPort?.toString() ?: "",
                     onValueChange = {
-                        fc.fc.localPort = it.toInt()
+                        fc.fc.localPort = it?.toInt()
                     },
                     editable = fc.ifrunnig.value.not()
                 )
@@ -230,7 +230,7 @@ fun topShow(
                     title = i18N.getProperty("cg-localIP"),
                     currentValue = fc.fc.localIP ?: "",
                     onValueChange = {
-                        fc.fc.localIP = it
+                        fc.fc.localIP = it?: ""
                     },
                     editable = fc.ifrunnig.value.not()
                 )
@@ -241,7 +241,7 @@ fun topShow(
                     type = KeyboardType.Number,
                     currentValue = fc.fc.localPort?.toString() ?: "",
                     onValueChange = {
-                        fc.fc.localPort = it.toInt()
+                        fc.fc.localPort = it?.toInt()
                     },
                     editable = fc.ifrunnig.value.not()
                 )
@@ -252,7 +252,7 @@ fun topShow(
                     type = KeyboardType.Number,
                     currentValue = fc.fc.remotePort?.toString() ?: "",
                     onValueChange = {
-                        fc.fc.remotePort = it.toInt()
+                        fc.fc.remotePort = it?.toInt()
                     },
                     editable = fc.ifrunnig.value.not()
                 )
@@ -263,9 +263,9 @@ fun topShow(
                     id = "localIP",
                     modifier = Modifier.width(200.dp),
                     title = i18N.getProperty("cg-localIP"),
-                    currentValue = fc.fc.localIP.toString(),
+                    currentValue = fc.fc.localIP.toString()?:"",
                     onValueChange = {
-                        fc.fc.localIP = it
+                        fc.fc.localIP = it?: ""
                     },
                     editable = fc.ifrunnig.value.not()
                 )
@@ -276,7 +276,7 @@ fun topShow(
                     type = KeyboardType.Number,
                     currentValue = fc.fc.localPort?.toString() ?: "",
                     onValueChange = {
-                        fc.fc.localPort = it.toInt()
+                        fc.fc.localPort = it?.toInt()
                     },
                     editable = fc.ifrunnig.value.not()
                 )
@@ -287,7 +287,7 @@ fun topShow(
                     type = KeyboardType.Number,
                     currentValue = fc.fc.remotePort?.toString() ?: "",
                     onValueChange = {
-                        fc.fc.remotePort = it.toInt()
+                        fc.fc.remotePort = it?.toInt()
                     },
                     editable = fc.ifrunnig.value.not()
                 )

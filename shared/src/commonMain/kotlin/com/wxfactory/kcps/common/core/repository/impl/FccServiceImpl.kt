@@ -21,7 +21,7 @@ import kotlinx.serialization.builtins.ListSerializer
  * 可能存在数据事务问题！
  */
 class FccServiceImpl(private val observableSettings: ObservableSettings) : FccService {
-    private final val allFcc : String = "ALL_FCC2"
+    private final val allFcc : String = "ALL_FCC10"
     public final val ENABLE_PREFIX : String = "ENABLEPREFIX"
     override fun getAllFcc(): List<FrpConfigC>? {
         return observableSettings.decodeValueOrNull<List<FrpConfigC>>(ListSerializer(FrpConfigSerial),allFcc)

@@ -1,0 +1,3 @@
+-dontwarn org.apache.commons.**
+-dontwarn com.alibaba.**
+-dontwarn cn.hutool.**
