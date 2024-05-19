@@ -1,3 +1,5 @@
 -dontwarn org.apache.commons.**
 -dontwarn com.alibaba.**
 -dontwarn cn.hutool.**
+-keep class kotlinx.coroutines.internal.MainDispatcherFactory { *; }
+-keep class kotlinx.coroutines.swing.SwingDispatcherFactory { *; }
