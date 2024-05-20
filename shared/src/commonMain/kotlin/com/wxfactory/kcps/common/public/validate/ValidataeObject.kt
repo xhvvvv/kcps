@@ -31,7 +31,7 @@ abstract class Validator(val remindText:String) {
 open class EmailValidator(remindText:String = "请输入正确的邮箱格式！")  : Validator(remindText) {
     val v :org.apache.commons.validator.routines.EmailValidator = org.apache.commons.validator.routines.EmailValidator. getInstance(true)
     override fun virfy(obj: String?): Boolean {
-        if (obj == null ) return true
+        if (StrUtil.isEmpty(obj) ) return true
         else return v.isValid(obj);
     }
 
@@ -48,7 +48,7 @@ open class NnullValidator(remindText:String = "请输入！")  : Validator(remin
 open class NumberValidator(remindText:String = "请输入数字形式！")  : Validator(remindText) {
     val v:DoubleValidator = DoubleValidator()
     override fun virfy(obj: String?): Boolean {
-        if (obj == null ) return true
+        if (StrUtil.isEmpty(obj) ) return true
         else return v.isValid(obj);
     }
 }
@@ -56,7 +56,7 @@ open class NumberValidator(remindText:String = "请输入数字形式！")  : Va
 open class IntValidator(remindText:String = "请输入整数形式！")  : Validator(remindText) {
     val v: IntegerValidator = IntegerValidator()
     override fun virfy(obj: String?): Boolean {
-        if (obj == null ) return true
+        if (StrUtil.isEmpty(obj) ) return true
         else return v.isValid(obj);
     }
 }
@@ -87,7 +87,7 @@ open class IpValidator( remindText:String = "请输入正确的ip字符！")  : 
 
     val v: InetAddressValidator = InetAddressValidator()
     override fun virfy(obj: String?): Boolean {
-        if (obj == null ) return true
+        if (StrUtil.isEmpty(obj) ) return true
         else return v.isValid(obj);
     }
 }  

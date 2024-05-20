@@ -24,6 +24,16 @@ class SettingServiceImpl(private val maybePersisRedis: StoreDao): SettingService
         }
     }
 
+    override fun getExesLocation(): String? {
+        return maybePersisRedis.getNonFlowString(key = StoreDao.EXES_LOCATION)
+    }
+
+    override fun saveExesLocation(file: String?) {
+        file?.let {
+            maybePersisRedis.setString(StoreDao.EXES_LOCATION, file )
+        }
+    }
+
     override fun getFccTypes(): Flow<String?> {
         return maybePersisRedis.getString(key = StoreDao.EXE_CONFIG_TYPE)
     }

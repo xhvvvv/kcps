@@ -13,6 +13,9 @@ interface SettingService {
     fun getExeLocation(): String?
     fun saveExeLocation(file:String?)
 
+    fun getExesLocation(): String?
+    fun saveExesLocation(file:String?)
+
     fun getFccTypes(): Flow<String?>
     fun saveFccTypes(file:String?)
 

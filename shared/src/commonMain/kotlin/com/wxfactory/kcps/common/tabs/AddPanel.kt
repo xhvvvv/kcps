@@ -47,7 +47,7 @@ class AddPanel(
                 formState{
                     "configName" useValidators listOf(
                         nnullValidator,
-                        MaxLValidator(10)
+                        MaxLValidator(50)
                     )
                     "port" useValidators listOf(
                         intValidator
@@ -71,10 +71,8 @@ class AddPanel(
             }
             var chosedAddress: Address by remember { mutableStateOf(allServer.first()) }
 
-            val authType by remember {
-                derivedStateOf {
-                    MethodType.values().toList()
-                }
+            val authType = remember {
+                MethodType.values().toList()
             }
             var chosedAuthType by remember { mutableStateOf(authType[0]) }
             var token by remember { mutableStateOf("") }

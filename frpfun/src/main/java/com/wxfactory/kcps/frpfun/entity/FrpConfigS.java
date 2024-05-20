@@ -10,9 +10,9 @@ import java.net.InetSocketAddress;
 @Getter
 @Setter
 public class FrpConfigS extends FrpConfig{
-    private String kcpBindPort;
-    private String quicBindPort;
-    private String tcpmuxHTTPConnectPort ;
+    private Integer kcpBindPort;
+    private Integer quicBindPort;
+    private Integer tcpmuxHTTPConnectPort ;
     
     
     public FrpConfigS(@NotNull String host, @NotNull Integer port) {

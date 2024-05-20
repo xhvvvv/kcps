@@ -3,6 +3,9 @@ package com.wxfactory.kcps.frpfun.translate;
 import cn.hutool.core.io.FileUtil;
 import com.wxfactory.kcps.frpfun.entity.FrpConfig;
 import com.wxfactory.kcps.frpfun.entity.FrpConfigC;
+import com.wxfactory.kcps.frpfun.entity.FrpConfigS;
+import com.wxfactory.kcps.frpfun.entity.FrpcTypes;
+import com.wxfactory.kcps.frpfun.translate.impl.TomlSTTP;
 import com.wxfactory.kcps.frpfun.translate.impl.TomlTTP;
 
 import java.io.File;
@@ -14,6 +17,7 @@ import java.nio.charset.StandardCharsets;
  */
 public class TranslateTool {
     private static ToTypeProcessor ttp = new TomlTTP();
+    private static ToTypeProcessor ttps = new TomlSTTP();
     /**
      * 将配置翻译到指定的文件当中去
      * //默认为toml格式
@@ -25,20 +29,27 @@ public class TranslateTool {
      * @param alone 连带配置翻译
      * @return
      */
-    public static File doIt(FrpConfigC fc , File aimFile , boolean alone , ConfigTypes type ){
+    public static File doIt(FrpConfig  fc , File aimFile , boolean alone , ConfigTypes type ){
         File configF = new File(aimFile,fc.getName()+"."+type.name().toLowerCase());
         StringBuilder sb  = new StringBuilder();
-        if (ConfigTypes.JSON.equals(type)){
-            
-        }else{
-            if (alone){
-                sb.append(ttp.handleHead(fc));
-                ttp.handleSpecifyFcc(fc,sb);
+        if (fc instanceof FrpConfigC){
+            if (ConfigTypes.JSON.equals(type)){
+                
             }else{
-                sb.append(ttp.transfer(fc));
+                if (alone){
+                    sb.append(ttp.handleHead(fc));
+                    ttp.handleSpecifyFcc(fc,sb);
+                }else{
+                    sb.append(ttp.transfer(fc));
+                }
+            }
+        }else if (fc instanceof FrpConfigS){
+            if (ConfigTypes.JSON.equals(type)){
+                
+            }else{
+                sb.append(ttps.transfer(fc));
             }
         }
-        
         FileUtil.writeString(sb.toString() ,  configF, StandardCharsets.UTF_8);
         return configF;
     }

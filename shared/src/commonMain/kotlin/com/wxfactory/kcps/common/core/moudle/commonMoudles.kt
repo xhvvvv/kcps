@@ -9,8 +9,10 @@ import com.wxfactory.kcps.common.core.repository.impl.SettingServiceImpl
 import com.wxfactory.kcps.common.screen.data.ScreenViewModel
 import com.wxfactory.kcps.common.tabs.AboutTab
 import com.wxfactory.kcps.common.tabs.ConfigTab
+import com.wxfactory.kcps.common.tabs.ServerTab
 import com.wxfactory.kcps.common.tabs.SettingTab
 import com.wxfactory.kcps.frpfun.entity.FrpConfigC
+import com.wxfactory.kcps.frpfun.entity.FrpConfigS
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
@@ -18,6 +20,7 @@ val tables = module {
     single<List<Tab>>(named("tabs")) {
         listOf(
             ConfigTab(),
+            ServerTab(),
             SettingTab(),
             AboutTab(),
         )
@@ -39,6 +42,13 @@ val frp = module {
             screenViewModel.fcs.map {
                 FrpConfigCCompose(it)
             }.toMutableList()
+    }
+    //全局frpc配置列表
+    single<FrpConfigCCompose<FrpConfigS>> (named("fcServer")) {
+        val screenViewModel : ScreenViewModel = get()
+        screenViewModel.fcServer?.let { 
+            FrpConfigCCompose(it)
+        }?: FrpConfigCCompose(FrpConfigS("127.0.0.1",10624).apply { name = "Server" })
     }
 }
 

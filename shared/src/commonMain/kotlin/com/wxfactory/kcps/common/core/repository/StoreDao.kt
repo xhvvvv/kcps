@@ -9,6 +9,7 @@ class  StoreDao constructor(private val observableSettings: ObservableSettings) 
     companion object {
         const val APP_THEME = "app_theme_key"
         const val EXE_LOCATION = "exeLocation"
+        const val EXES_LOCATION = "exesLocation"
         const val EXE_CONFIG_TYPE = "INI"
         const val FCC_ALL = "allFcc"
     } 

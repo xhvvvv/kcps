@@ -16,4 +16,8 @@ public class TokenAuth extends Authentication {
         super(method);
         this.token = token;
     }
+    public TokenAuth(String token) {
+        super(MethodType.TOKEN);
+        this.token = token;
+    }
 }

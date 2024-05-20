@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.compose") version "1.5.11" apply false
     id("com.diffplug.spotless") version "6.25.0"
     kotlin("plugin.serialization") version "1.9.21"  apply false
+    
 }
  
 
@@ -19,6 +20,7 @@ allprojects{
 
 subprojects{
     apply(plugin = "com.diffplug.spotless")
+    apply(plugin = "idea")
     spotless {
         kotlin {
             target("**/*.kt") //项目中的所有kt文件

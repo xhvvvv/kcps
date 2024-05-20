@@ -15,8 +15,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.wxfactory.kcps.common.core.entity.FrpConfigCCompose
-import com.wxfactory.kcps.common.platform.frpfun.startFrpC
-import com.wxfactory.kcps.common.platform.frpfun.stopFrpC
+import com.wxfactory.kcps.common.platform.frpfun.startFrp
+import com.wxfactory.kcps.common.platform.frpfun.stopFrp
+import com.wxfactory.kcps.frpfun.entity.FrpConfig
 import com.wxfactory.kcps.frpfun.entity.FrpConfigC
 import com.wxfactory.kcps.frpfun.entity.frpconfigcs.StcpFcc
 import com.wxfactory.kcps.frpfun.entity.frpconfigcs.TcpFcc
@@ -343,11 +344,12 @@ fun fccExtendCard(
                                              if (!formState.virfyAll()){
                                                  alert("无法启动，请确保参数填写正常！")
                                                  this.cancel()
+                                                 return@launch
                                              }
                                              loadding = true
                                              if(it){
                                                  //开启
-                                                 startFrpC(fc)
+                                                 startFrp(fc as FrpConfigCCompose<FrpConfig>)
                                                  run.launch {
                                                      if(fc.ec != null && fc.ec?.executeWatchdog !=null && fc.ec?.executeWatchdog?.isWatching == true){
                                                          alert("启动成功！")
@@ -357,7 +359,7 @@ fun fccExtendCard(
                                                  }
                                              }else{
                                                  //关闭
-                                                 stopFrpC(fc)
+                                                 stopFrp(fc as FrpConfigCCompose<FrpConfig>)
                                                  alert("关闭完毕！")
                                              }
                                              loadding = false
