@@ -2,6 +2,7 @@ package com.wxfactory.kcps.frpfun;
 
 import cn.hutool.core.util.StrUtil;
 import com.wxfactory.kcps.frpfun.entity.FrpConfigC;
+import com.wxfactory.kcps.frpfun.entity.FrpConfigS;
 import com.wxfactory.kcps.frpfun.frpBash.ExcuteEntity;
 import com.wxfactory.kcps.frpfun.frpBash.bash.ExpandExecuteResultHandler;
 import com.wxfactory.kcps.frpfun.frpBash.bash.impl.DoFcBash;
@@ -58,6 +59,33 @@ public class Fc2Start {
         ec.setWorkDir(workDirF);
         ec.setExcuteFile(new File(exeFile));
         return DoFcBash.startFc(ec,executeResultHandler);
+    }
+    /**
+     * 给我一个配置服务端，我就能将它启动起来
+     * @author xhvvvv
+     * @date 2024/5/19
+     */
+    public static ExcuteCon startS(FrpConfigS fc, Map<String, Object> others) throws IOException {
+        String exeFile = (String) others.get(EXE_LOCATION);
+        ConfigTypes configType = (ConfigTypes) others.get(EXE_CONFIG_TYPE);
+        ExpandExecuteResultHandler executeResultHandler = (ExpandExecuteResultHandler) others.get(EXE_CALLBACK);
+        //默认工作目录
+        String workDir = (String) others.get(EXE_WORK_DIR);
+        File workDirF ;
+        if (StrUtil.isEmpty(workDir)){
+            File exeFileF = new File(exeFile);
+            workDirF = new File(exeFileF.getParentFile(),fc.getId());
+        }else{
+            workDirF = new File(workDir);
+        }
+        //首先翻译
+        File config = TranslateTool.doIt(fc , workDirF , false , configType);
+        //然后启动
+        ExcuteEntity ec = new ExcuteEntity();
+        ec.setConfigFile(config);
+        ec.setWorkDir(workDirF);
+        ec.setExcuteFile(new File(exeFile));
+        return DoFcBash.startFs(ec,executeResultHandler);
     }
     
 }

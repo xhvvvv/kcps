@@ -46,4 +46,30 @@ public class DoFcBash {
         executor.execute(cl,resultHandler);
         return excuteCon;
     }
+    public static ExcuteCon startFs(ExcuteEntity ec, ExpandExecuteResultHandler handler) throws IOException {
+        ExcuteCon excuteCon = new ExcuteCon(ec);
+        final MyExecuteResultHandler resultHandler = new MyExecuteResultHandler(handler);
+        DefaultExecutor executor =  DefaultExecutor.builder().get();
+        // 重定向stdout和stderr到文件
+        File f = new File(ec.getWorkDir(),"log/logs.txt");
+        if (!f.exists()){
+            f.getParentFile().mkdirs();
+            f.createNewFile();
+        }
+        FileOutputStream fileOutputStream = new FileOutputStream( f );
+        PumpStreamHandler pumpStreamHandler = new PumpStreamHandler(fileOutputStream);
+        ExecuteWatchdog executeWatchdog = new ExecuteWatchdog(ExecuteWatchdog.INFINITE_TIMEOUT);
+        executor.setStreamHandler(pumpStreamHandler);
+        executor.setWatchdog(executeWatchdog);
+        StringBuilder sb = new StringBuilder();
+        sb.append(ec.getExcuteFile().getAbsolutePath())
+                .append(" ")
+                .append("-c ")
+                .append(ec.getConfigFile());
+        CommandLine cl = CommandLine.parse(sb.toString());
+        excuteCon.setExecuteWatchdog(executeWatchdog);
+        excuteCon.setFileOutputStream(fileOutputStream);
+        executor.execute(cl,resultHandler);
+        return excuteCon;
+    }
 }

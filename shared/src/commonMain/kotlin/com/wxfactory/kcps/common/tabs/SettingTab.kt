@@ -1,6 +1,7 @@
 package com.wxfactory.kcps.common.tabs
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
@@ -45,8 +46,8 @@ class SettingTab() : Tab{
 private fun settingPanel(
     mainViewModel: ScreenViewModel = koinInject<ScreenViewModel>(),
 ) {
-    var location:String by remember{ mutableStateOf(mainViewModel.exeFile?:"") }
-    val type = mainViewModel.confType.collectAsState().value;
+    var frpcLocation:String by remember{ mutableStateOf(mainViewModel.exeFile?:"") }
+    var frpsLocation:String by remember{ mutableStateOf(mainViewModel.exeSFile?:"") }
     
     Scaffold(
         bottomBar = {
@@ -55,7 +56,8 @@ private fun settingPanel(
                 horizontalArrangement =  Arrangement.End
             ){
                 Button(onClick ={
-                    mainViewModel.setExeLocation(location)
+                    mainViewModel.setExeLocation(frpcLocation)
+                    mainViewModel.setExeSLocation(frpsLocation)
                 }){
                     Text("确定保存")
                 }
@@ -64,14 +66,14 @@ private fun settingPanel(
     ){ innerPadding ->
         Card(
             modifier = Modifier.padding(innerPadding),
+            shape =  RoundedCornerShape(0.dp),
         ) {
-            txb("执行文件位置"){
-                
+            txb("frpc执行文件位置"){
                 OutlinedTextField(
                     modifier = Modifier.fillMaxWidth(0.7f),
-                    value = location,
+                    value = frpcLocation,
                     onValueChange = {
-                        location = it
+                        frpcLocation = it
                     },
                     singleLine = true
                 )
@@ -89,7 +91,43 @@ private fun settingPanel(
                             val directory = fileDialog.directory
                             val file = fileDialog.file
                             if (directory != null && file != null) {
-                                location= "$directory$file"
+                                frpcLocation= "$directory$file"
+                            }
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Folder,
+                            contentDescription = "选择文件",
+                        )
+                    }
+
+                }
+            }
+
+            txb("frps执行文件位置"){
+                OutlinedTextField(
+                    modifier = Modifier.fillMaxWidth(0.7f),
+                    value = frpsLocation,
+                    onValueChange = {
+                        frpsLocation = it
+                    },
+                    singleLine = true
+                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    IconButton(
+                        colors = IconButtonDefaults.iconButtonColors(
+                            containerColor  = Color(0xFFFFD8E4),
+                        ),
+                        onClick = {
+                            val fileDialog = FileDialog(ComposeWindow())
+                            fileDialog.isVisible = true
+                            val directory = fileDialog.directory
+                            val file = fileDialog.file
+                            if (directory != null && file != null) {
+                                frpsLocation= "$directory$file"
                             }
                         }
                     ) {

@@ -25,8 +25,7 @@ import cafe.adriel.voyager.navigator.bottomSheet.LocalBottomSheetNavigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.wxfactory.kcps.common.core.entity.FrpConfigCCompose
-import com.wxfactory.kcps.common.platform.frpfun.startFrpC
-import com.wxfactory.kcps.common.platform.frpfun.stopFrpC
+import com.wxfactory.kcps.common.platform.frpfun.stopFrp
 import com.wxfactory.kcps.common.public.*
 import com.wxfactory.kcps.common.public.validate.intValidator
 import com.wxfactory.kcps.common.public.validate.nnullValidator
@@ -95,7 +94,7 @@ fun SettingsScreen(
                                 onClick = {
                                     mainViewModel.screenModelScope.launch { 
                                         fcs.forEach {
-                                            stopFrpC(it)
+                                            stopFrp(it as FrpConfigCCompose<FrpConfig>)
                                         }
                                     }
                                 }
@@ -204,8 +203,6 @@ fun SettingsScreenContent(
             items = frpConfigs ,
             key = { x -> (x.fc.id )}
         ) {
-            var disableSwitch by remember { mutableStateOf(true) }
-            var disabledSwitch = { con : Boolean -> disableSwitch = con }
             Form {
                 val formState = LocalFormState.current
                 LaunchedEffect(Unit) {

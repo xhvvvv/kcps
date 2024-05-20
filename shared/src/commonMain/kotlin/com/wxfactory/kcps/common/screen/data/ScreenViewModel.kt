@@ -7,6 +7,7 @@ import cn.hutool.core.util.SerializeUtil
 import com.wxfactory.kcps.common.core.repository.FccService
 import com.wxfactory.kcps.common.core.repository.SettingService
 import com.wxfactory.kcps.frpfun.entity.FrpConfigC
+import com.wxfactory.kcps.frpfun.entity.FrpConfigS
 import kotlinx.coroutines.flow.*
 import java.io.File
 import java.util.ArrayList
@@ -28,6 +29,14 @@ class ScreenViewModel(
         }
     fun setExeLocation( file : String?) {
         settingsRepository.saveExeLocation(file)
+    }
+
+    val exeSFile : String?
+        get() {
+           return settingsRepository.getExesLocation()
+        }
+    fun setExeSLocation( file : String?) {
+        settingsRepository.saveExesLocation(file)
     }
 
     val confType : StateFlow<String? > = settingsRepository.getFccTypes().stateIn(
@@ -63,6 +72,7 @@ class ScreenViewModel(
     fun save( fc : List<FrpConfigC>) {
         fccService.saveAllFcc(fc)
     }
-
+    
+    val fcServer : FrpConfigS? = null
 
 }
