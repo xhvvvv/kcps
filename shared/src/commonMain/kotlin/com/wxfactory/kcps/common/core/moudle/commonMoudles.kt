@@ -7,10 +7,7 @@ import com.wxfactory.kcps.common.core.repository.StoreDao
 import com.wxfactory.kcps.common.core.repository.impl.FccServiceImpl
 import com.wxfactory.kcps.common.core.repository.impl.SettingServiceImpl
 import com.wxfactory.kcps.common.screen.data.ScreenViewModel
-import com.wxfactory.kcps.common.tabs.AboutTab
-import com.wxfactory.kcps.common.tabs.ConfigTab
-import com.wxfactory.kcps.common.tabs.ServerTab
-import com.wxfactory.kcps.common.tabs.SettingTab
+import com.wxfactory.kcps.common.tabs.*
 import com.wxfactory.kcps.frpfun.entity.FrpConfigC
 import com.wxfactory.kcps.frpfun.entity.FrpConfigS
 import org.koin.core.qualifier.named
@@ -23,6 +20,7 @@ val tables = module {
             ServerTab(),
             SettingTab(),
             AboutTab(),
+//            TestTab(),
         )
     }
 }

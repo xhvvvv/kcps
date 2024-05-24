@@ -1,12 +1,10 @@
 package com.wxfactory.kcps.common
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.sp
@@ -35,7 +33,6 @@ fun Main(
         else -> false
     }
     val autoColors = if (darkTheme) DarkColors else LightColors
-    
     MaterialTheme(
         colorScheme = autoColors,
     ) {
