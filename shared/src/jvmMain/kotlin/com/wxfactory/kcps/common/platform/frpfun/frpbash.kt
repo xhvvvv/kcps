@@ -18,7 +18,6 @@ import org.koin.java.KoinJavaComponent.get
  */
 actual fun startFrp( frp: FrpConfigCCompose<FrpConfig> ): ExcuteCon {
     val mainViewModel: ScreenViewModel = get(ScreenViewModel::class.java)
-    frp.exeStartCallBack()
     var con:ExcuteCon? = null  
     if (frp.fc is FrpConfigC) {
         con = 
@@ -64,6 +63,9 @@ actual fun startFrp( frp: FrpConfigCCompose<FrpConfig> ): ExcuteCon {
             )
     }
     frp.ec = con
+    if (con != null && con.isExcuteSuccess()){
+        frp.exeStartCallBack()
+    }
     return con!!;
 }
  

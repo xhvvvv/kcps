@@ -9,6 +9,7 @@ import com.russhwolf.settings.serialization.encodeValue
 import com.wxfactory.kcps.common.core.repository.FccService
 import com.wxfactory.kcps.common.core.repository.StoreDao
 import com.wxfactory.kcps.common.util.FrpConfigSerial
+import com.wxfactory.kcps.common.util.someStatic
 import com.wxfactory.kcps.frpfun.entity.FrpConfig
 import com.wxfactory.kcps.frpfun.entity.FrpConfigC
 import kotlinx.coroutines.flow.Flow
@@ -21,8 +22,7 @@ import kotlinx.serialization.builtins.ListSerializer
  * 可能存在数据事务问题！
  */
 class FccServiceImpl(private val observableSettings: ObservableSettings) : FccService {
-    private final val allFcc : String = "ALL_FCC10"
-    public final val ENABLE_PREFIX : String = "ENABLEPREFIX"
+    private final val allFcc : String = someStatic.getProperty("storePrefix", "") + "ALL_FCC10"
     override fun getAllFcc(): List<FrpConfigC>? {
         return observableSettings.decodeValueOrNull<List<FrpConfigC>>(ListSerializer(FrpConfigSerial),allFcc)
     }

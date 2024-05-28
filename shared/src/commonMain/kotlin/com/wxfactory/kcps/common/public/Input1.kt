@@ -26,6 +26,7 @@ fun InputNo1(
     id : String? = null , //校验的唯一标识
     modifier: Modifier = Modifier,
     title: String,
+    labelTextStyle: TextStyle = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.SemiBold),
     type : KeyboardType = KeyboardType.Text,
     currentValue: String,
     onValueChange: (String?) -> Unit,
@@ -49,15 +50,11 @@ fun InputNo1(
     
     BloomInputTextField(
         modifier = modifier,
-        textStyle = MaterialTheme.typography.bodySmall.copy(
-            textAlign = TextAlign.Start,
-        ),
+        textStyle = MaterialTheme.typography.bodySmall,
         label = {
             Text(
                 text = title,
-                style = MaterialTheme.typography.labelLarge.copy(
-                    fontWeight = FontWeight.SemiBold,
-                ),
+                style = labelTextStyle,
             )
         },
         value = date,

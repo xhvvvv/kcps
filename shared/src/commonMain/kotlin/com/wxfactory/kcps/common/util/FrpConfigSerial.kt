@@ -182,11 +182,9 @@ object FrpConfigSerial : KSerializer<FrpConfigC> {
                     MethodType.OIDC.name -> TODO("还没有设置这个认证")
                     else -> throw Exception("没有找到对应的认证类")
                 }
-
-                fcc?.localIP = localIP
-                fcc?.localPort = localPort
-
             }
+            fcc?.localIP = localIP
+            fcc?.localPort = localPort
             
         }
         return fcc!!

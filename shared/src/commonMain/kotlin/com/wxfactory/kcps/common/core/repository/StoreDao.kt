@@ -6,13 +6,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.Serializable
 
 class  StoreDao constructor(private val observableSettings: ObservableSettings) {
-    companion object {
-        const val APP_THEME = "app_theme_key"
-        const val EXE_LOCATION = "exeLocation"
-        const val EXES_LOCATION = "exesLocation"
-        const val EXE_CONFIG_TYPE = "INI"
-        const val FCC_ALL = "allFcc"
-    } 
     fun setString(key: String, value: String) {
         observableSettings.set(key = key, value = value)
     }
@@ -43,7 +36,6 @@ class  StoreDao constructor(private val observableSettings: ObservableSettings) 
             defaultValue = false,
         )
     }
-
     fun setBoolean(key: String, value: Boolean) {
         observableSettings.set(key = key, value = value)
     }

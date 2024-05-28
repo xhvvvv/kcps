@@ -31,20 +31,15 @@ public abstract class FrpConfig implements Serializable {
     @Nullable
     protected Authentication authentication;
     
-    protected void generateId(){
-        Snowflake snowflake = new Snowflake(1, 1);
-        this.id = String.valueOf(snowflake.nextId());
-    }
+  
     public FrpConfig(@NotNull String host,@NotNull Integer port) {
         this.host = host;
         this.port = port;
-        generateId();
     }
 
     public FrpConfig(@NotNull String host,@NotNull Integer port, @Nullable Authentication authentication) {
         this.host = host;
         this.port = port;
         this.authentication = authentication;
-        generateId();
     }
 }
