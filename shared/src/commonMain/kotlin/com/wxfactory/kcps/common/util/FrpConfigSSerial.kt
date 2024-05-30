@@ -17,7 +17,7 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
-
+@Deprecated("一点都不好用")
 object FrpConfigSSerial : KSerializer<FrpConfigS> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("frpc", PrimitiveKind.STRING)
 

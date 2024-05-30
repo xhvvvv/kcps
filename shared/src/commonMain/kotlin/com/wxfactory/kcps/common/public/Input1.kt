@@ -9,6 +9,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -106,7 +107,9 @@ internal fun MyInputTextField(
         }
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth()
-                .defaultMinSize(minWidth = 40.dp),
+                .defaultMinSize(minWidth = 40.dp)
+                .scale(scaleY = 0.8f, scaleX = 1f)
+            ,
             value = value.value?:"",
             onValueChange = {
                 value.value = it

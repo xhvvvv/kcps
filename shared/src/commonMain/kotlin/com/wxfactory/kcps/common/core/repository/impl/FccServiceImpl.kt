@@ -12,11 +12,13 @@ import com.wxfactory.kcps.common.util.FrpConfigSerial
 import com.wxfactory.kcps.common.util.someStatic
 import com.wxfactory.kcps.frpfun.entity.FrpConfig
 import com.wxfactory.kcps.frpfun.entity.FrpConfigC
+import com.wxfactory.kcps.frpfun.util.SerialUtil
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.builtins.ListSerializer
+import java.io.File
 
 /***
  * 可能存在数据事务问题！
@@ -24,11 +26,13 @@ import kotlinx.serialization.builtins.ListSerializer
 class FccServiceImpl(private val observableSettings: ObservableSettings) : FccService {
     private final val allFcc : String = someStatic.getProperty("storePrefix", "") + "ALL_FCC10"
     override fun getAllFcc(): List<FrpConfigC>? {
-        return observableSettings.decodeValueOrNull<List<FrpConfigC>>(ListSerializer(FrpConfigSerial),allFcc)
+        return SerialUtil.deSerialObject<List<FrpConfigC>>(File(allFcc))
+//        return observableSettings.decodeValueOrNull<List<FrpConfigC>>(ListSerializer(FrpConfigSerial),allFcc)
     }
 
     override fun saveAllFcc(fccs: List<FrpConfigC>) {
-        observableSettings.encodeValue<List<FrpConfigC>>(ListSerializer(FrpConfigSerial),allFcc,fccs)
+        SerialUtil.serialObject(fccs,File(allFcc))
+//        observableSettings.encodeValue<List<FrpConfigC>>(ListSerializer(FrpConfigSerial),allFcc,fccs)
     }
     
     override fun getFccById(id:String): FrpConfigC? {

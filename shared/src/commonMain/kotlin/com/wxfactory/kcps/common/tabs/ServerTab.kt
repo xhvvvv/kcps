@@ -49,11 +49,11 @@ class ServerTab() : Tab {
     override val options: TabOptions
         @Composable
         get() {
-            val title = "服务端"
+            val title =  i18N.getProperty("tab-serverTab")
             val imageVector = rememberVectorPainter(Icons.Outlined.Dns)
             return TabOptions(
                 index = 1u,
-                title = title,
+                title = i18N.getProperty("tab-serverTab"),
                 icon = imageVector,
             )
         }

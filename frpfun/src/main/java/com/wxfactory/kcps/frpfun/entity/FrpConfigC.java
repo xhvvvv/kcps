@@ -33,6 +33,10 @@ public abstract class FrpConfigC extends FrpConfig{
     /**本地设备ip*/
     private String localIP;
     private Integer localPort;
+    /**Stun服务器，帮助p2p打洞*/
+    private String natHoleStunServer;
+    /** 第一次登陆失败后是否退出，默认为 true*/
+    private Boolean loginFailExit = true;
 
     private FrpConfigC pre;
     private FrpConfigC next;

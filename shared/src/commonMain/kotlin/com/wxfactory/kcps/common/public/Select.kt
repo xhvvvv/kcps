@@ -13,6 +13,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
@@ -34,7 +35,9 @@ fun <T> Select(
 ) {
     var expanded by remember { mutableStateOf(false) }
     var chosedT by remember { mutableStateOf<T>(primarySelect) }
-    Column {
+    Column(
+        Modifier.scale(scaleY = 0.8f, scaleX = 1f).padding(top = 2.dp)
+    ) {
         if (label != null) {
             label()
             Spacer(modifier = Modifier.height(4.dp))

@@ -316,6 +316,7 @@ fun operationMain(
     var ifRunOnly : Boolean by mutableStateOf(fc.ifrunOnly )
     var enabled : Boolean by remember { mutableStateOf(fc.fc.enabled )}
     val formState = LocalFormState.current
+    val localAlertDialog = LocalAlertDialog.current
     //启动和关闭配置的逻辑
     val runLogic :  ( Boolean) -> Unit = remember {
         //注册回调
@@ -421,9 +422,15 @@ fun operationMain(
             ),
             onClick = {
                 if(fc.ifrunnig.value){
-                    alert("正在运行中，请先停止")
+                    localAlertDialog.alert("正在运行中，请先停止")
                 }else{
-                    removeFc(fc)
+                    localAlertDialog.confirm(
+                        title = "确定删除？",
+                        text= "删除配置后无法找回，确定删除？",
+                        onConfirmation =  {
+                            removeFc(fc)      
+                        },
+                        {})
                 }
             }
         ) {

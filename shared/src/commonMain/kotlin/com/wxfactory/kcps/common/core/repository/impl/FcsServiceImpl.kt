@@ -15,11 +15,13 @@ import com.wxfactory.kcps.common.util.someStatic
 import com.wxfactory.kcps.frpfun.entity.FrpConfig
 import com.wxfactory.kcps.frpfun.entity.FrpConfigC
 import com.wxfactory.kcps.frpfun.entity.FrpConfigS
+import com.wxfactory.kcps.frpfun.util.SerialUtil
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.builtins.ListSerializer
+import java.io.File
 
 /***
  * 可能存在数据事务问题！
@@ -28,11 +30,13 @@ class FcsServiceImpl(private val observableSettings: ObservableSettings) : FcsSe
     private final val fcsKey : String = someStatic.getProperty("storePrefix", "") + "FCS"
 
     override fun getServer(): FrpConfigS? {
-        return observableSettings.decodeValueOrNull<FrpConfigS>(FrpConfigSSerial,fcsKey)
+        return SerialUtil.deSerialObject<FrpConfigS>(File(fcsKey))
+//        return observableSettings.decodeValueOrNull<FrpConfigS>(FrpConfigSSerial,fcsKey)
     }
 
     override fun saveFcs(fcs: FrpConfigS) {
-        observableSettings.encodeValue<FrpConfigS>(FrpConfigSSerial,fcsKey,fcs)
+        SerialUtil.serialObject(fcs,File(fcsKey))
+//        observableSettings.encodeValue<FrpConfigS>(FrpConfigSSerial,fcsKey,fcs)
     }
 
 }

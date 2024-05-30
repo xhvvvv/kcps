@@ -1,9 +1,13 @@
 package com.wxfactory.kcps.common
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.AlertDialog
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
+import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
@@ -16,6 +20,9 @@ import com.wxfactory.kcps.common.core.moudle.FC_C
 import com.wxfactory.kcps.common.core.moudle.FC_S
 import com.wxfactory.kcps.common.platform.frpfun.startFrp
 import com.wxfactory.kcps.common.platform.frpfun.stopFrp
+import com.wxfactory.kcps.common.public.AlertDialogDefaults
+import com.wxfactory.kcps.common.public.FormState
+import com.wxfactory.kcps.common.public.LocalFormState
 import com.wxfactory.kcps.common.screen.ConfigPanel
 import com.wxfactory.kcps.common.screen.data.ScreenViewModel
 import com.wxfactory.kcps.common.screen.theme.DarkColors
@@ -46,17 +53,20 @@ fun Main(
     MyMaterialTheme(
         darkTheme
     )  {
-        //这里等待数据加载完成后再初始化和
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background,
-        ) {
-            //主界面，这里只有一个界面
-            Navigator(
-                screen =  ConfigPanel(items = koinInject(named("tabs"))),
-            )
-            
+        AlertDialogDefaults{
+            //这里等待数据加载完成后再初始化和
+            Surface(
+                modifier = Modifier.fillMaxSize(),
+                color = MaterialTheme.colorScheme.background,
+            ) {
+                //主界面，这里只有一个界面
+                Navigator(
+                    screen =  ConfigPanel(items = koinInject(named("tabs"))),
+                )
+
+            }
         }
+        
     }
     
     //查看服务端是否需要启动

@@ -9,6 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.awt.ComposeWindow
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.text.style.TextAlign
@@ -17,6 +18,7 @@ import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.wxfactory.kcps.common.public.Select
 import com.wxfactory.kcps.common.screen.data.ScreenViewModel
+import com.wxfactory.kcps.common.util.i18N
 import com.wxfactory.kcps.frpfun.entity.ConfigTypes
 import org.koin.compose.koinInject
 import java.awt.FileDialog
@@ -26,11 +28,11 @@ class SettingTab() : Tab{
     override val options: TabOptions
         @Composable
         get() {
-            val title = "Setting"
+            val title = i18N.getProperty("tab-settingTab")
             val imageVector = rememberVectorPainter( Icons.Outlined.Settings)
             return TabOptions(
                 index = 1u,
-                title = title,
+                title = i18N.getProperty("tab-settingTab"),
                 icon = imageVector,
             )
         }
@@ -70,7 +72,7 @@ private fun settingPanel(
         ) {
             txb("frpc执行文件位置"){
                 OutlinedTextField(
-                    modifier = Modifier.fillMaxWidth(0.7f),
+                    modifier = Modifier.fillMaxWidth(0.7f).scale(0.5f),
                     value = frpcLocation,
                     onValueChange = {
                         frpcLocation = it

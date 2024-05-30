@@ -26,6 +26,7 @@ import com.wxfactory.kcps.common.public.*
 import com.wxfactory.kcps.common.public.validate.intValidator
 import com.wxfactory.kcps.common.public.validate.nnullValidator
 import com.wxfactory.kcps.common.screen.data.ScreenViewModel
+import com.wxfactory.kcps.common.util.i18N
 import com.wxfactory.kcps.frpfun.entity.FrpConfig
 import com.wxfactory.kcps.frpfun.entity.FrpConfigC
 import kotlinx.coroutines.delay
@@ -38,11 +39,11 @@ class ConfigTab() : Tab {
     override val options: TabOptions
         @Composable
         get() {
-            val title = "客户端"
+            val title = i18N.getProperty("tab-configTab")
             val imageVector = rememberVectorPainter(Icons.Outlined.FlagCircle)
             return TabOptions(
                 index = 0u,
-                title = title,
+                title = i18N.getProperty("tab-configTab"),
                 icon = imageVector,
             )
         }
