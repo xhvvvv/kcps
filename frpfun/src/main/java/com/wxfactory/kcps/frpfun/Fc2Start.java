@@ -8,11 +8,10 @@ import com.wxfactory.kcps.frpfun.frpBash.StartException;
 import com.wxfactory.kcps.frpfun.frpBash.bash.ExpandExecuteResultHandler;
 import com.wxfactory.kcps.frpfun.frpBash.bash.impl.DoFcBash;
 import com.wxfactory.kcps.frpfun.frpBash.entity.ExcuteCon;
-import com.wxfactory.kcps.frpfun.translate.ConfigTypes;
+import com.wxfactory.kcps.frpfun.entity.ConfigTypes;
 import com.wxfactory.kcps.frpfun.translate.TranslateTool;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Map;
 
 /**

@@ -1,4 +1,4 @@
-package com.wxfactory.kcps.frpfun.translate;
+package com.wxfactory.kcps.frpfun.entity;
 
 /**
  * @author xhvvvv

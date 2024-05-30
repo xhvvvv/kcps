@@ -17,7 +17,7 @@ import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.wxfactory.kcps.common.public.Select
 import com.wxfactory.kcps.common.screen.data.ScreenViewModel
-import com.wxfactory.kcps.frpfun.translate.ConfigTypes
+import com.wxfactory.kcps.frpfun.entity.ConfigTypes
 import org.koin.compose.koinInject
 import java.awt.FileDialog
 

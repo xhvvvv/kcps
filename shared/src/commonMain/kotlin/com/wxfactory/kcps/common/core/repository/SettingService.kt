@@ -1,7 +1,6 @@
 package com.wxfactory.kcps.common.core.repository
 
 import com.wxfactory.kcps.common.util.someStatic
-import com.wxfactory.kcps.frpfun.translate.ConfigTypes
 import kotlinx.coroutines.flow.Flow
 
 

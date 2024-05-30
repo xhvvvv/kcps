@@ -8,7 +8,7 @@ import com.wxfactory.kcps.frpfun.entity.FrpConfigC
 import com.wxfactory.kcps.frpfun.entity.FrpConfigS
 import com.wxfactory.kcps.frpfun.frpBash.bash.ExpandExecuteResultHandler
 import com.wxfactory.kcps.frpfun.frpBash.entity.ExcuteCon
-import com.wxfactory.kcps.frpfun.translate.ConfigTypes
+import com.wxfactory.kcps.frpfun.entity.ConfigTypes
 import org.apache.commons.exec.ExecuteException
 import org.koin.java.KoinJavaComponent.get
 
@@ -25,7 +25,7 @@ actual fun startFrp( frp: FrpConfigCCompose<FrpConfig> ): ExcuteCon {
                 frp.fc  ,
                 mutableMapOf<String , Any>(
                     Pair(Fc2Start.EXE_LOCATION, mainViewModel.exeFile as Any),
-                    Pair(Fc2Start.EXE_CONFIG_TYPE, ConfigTypes.valueOf(mainViewModel.confType.value?:ConfigTypes.TOML.name) as Any),
+                    Pair(Fc2Start.EXE_CONFIG_TYPE, ConfigTypes.valueOf(mainViewModel.confType.value?: ConfigTypes.TOML.name) as Any),
                     Pair(Fc2Start.EXE_CALLBACK, ExpandExecuteResultHandler{ exitV: Int?, ex: ExecuteException? ->
                         ex?.let {
     
@@ -46,7 +46,7 @@ actual fun startFrp( frp: FrpConfigCCompose<FrpConfig> ): ExcuteCon {
                 frp.fc  ,
                 mutableMapOf<String , Any>(
                     Pair(Fc2Start.EXE_LOCATION, mainViewModel.exeSFile as Any),
-                    Pair(Fc2Start.EXE_CONFIG_TYPE, ConfigTypes.valueOf(mainViewModel.confType.value?:ConfigTypes.TOML.name) as Any),
+                    Pair(Fc2Start.EXE_CONFIG_TYPE, ConfigTypes.valueOf(mainViewModel.confType.value?: ConfigTypes.TOML.name) as Any),
                     Pair(Fc2Start.EXE_CALLBACK, ExpandExecuteResultHandler{ exitV: Int?, ex: ExecuteException? ->
                         ex?.let {
 

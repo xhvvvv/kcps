@@ -2,7 +2,9 @@ package com.wxfactory.kcps.common.tabs
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.*
@@ -25,6 +27,7 @@ import com.wxfactory.kcps.common.core.entity.FrpConfigCCompose
 import com.wxfactory.kcps.common.platform.frpfun.startFrp
 import com.wxfactory.kcps.common.platform.frpfun.stopFrp
 import com.wxfactory.kcps.common.public.*
+import com.wxfactory.kcps.common.public.validate.NnullValidator
 import com.wxfactory.kcps.common.public.validate.intValidator
 import com.wxfactory.kcps.common.public.validate.nnullValidator
 import com.wxfactory.kcps.common.screen.data.ScreenViewModel
@@ -40,7 +43,7 @@ import kotlinx.coroutines.sync.withLock
 import org.koin.compose.koinInject
 import org.koin.core.qualifier.named
 import java.util.*
-
+import com.wxfactory.kcps.common.public.CheckBox as MyCheckBox
 
 class ServerTab() : Tab {
     override val options: TabOptions
@@ -104,6 +107,19 @@ fun ServerSideScreen(
                 )
                 "pass" useValidators listOf(
                     nnullValidator
+                )
+                "maxPortsPerClient" useValidators listOf(
+                    nnullValidator,
+                    intValidator
+                )
+                "vhostHTTPPort" useValidators listOf(
+                    intValidator
+                )
+                "vhostHTTPSPort" useValidators listOf(
+                    intValidator
+                )
+                "vhostHTTPTimeout" useValidators listOf(
+                    intValidator
                 )
             }
         }
@@ -188,19 +204,17 @@ fun ServerSideScreen(
                 )
             }
         ) { innerPadding ->
+            val scrollState = rememberScrollState()
             Card(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(innerPadding),
+                    .padding(innerPadding)
+                    .verticalScroll(scrollState),
                 shape =  RoundedCornerShape(0.dp),
             ) {
 
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(20.dp),
-                    horizontalArrangement = Arrangement.spacedBy(20.dp)
-                ) {
+                //第一行
+                MyServerRow {
                     InputNo1(
                         id = "name",
                         modifier = Modifier.width(200.dp),
@@ -241,36 +255,39 @@ fun ServerSideScreen(
                         editable = fcs.getIfBusy().not()
                     )
 
-                    Column(
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
+                    InputNo1(
+                        id = "maxPortsPerClient",
+                        modifier = Modifier.width(200.dp),
+                        title = i18N.getProperty("cg-maxPortsPerClient"),
+                        type = KeyboardType.Number,
+                        currentValue = fcs.fc.maxPortsPerClient?.toString() ?: "",
+                        onValueChange = {
+                            if(it == null || it == ""){
+                                fcs.fc.maxPortsPerClient = null
+                            }else{
+                                fcs.fc.maxPortsPerClient = it.toInt()
+                            }
+                        },
+                        editable = fcs.getIfBusy().not(),
+                        placeholder = "0为不限制"
+                    )
+                    MyCheckBox(
+                        modifier = Modifier.width(width = 50.dp ),
+                        currentValue = fcs.fc.enabled,
+                        onValueChange = {
+                            fcs.fc.enabled = it
+                            fcs.ifStartOnce = true // 从下次开始自启
+                        }
                     ){
-                        var enabled : Boolean by remember { mutableStateOf(fcs.fc.enabled)}
                         Text(
                             style = fontType,
                             text = "自启",
                             textAlign = TextAlign.Center
                         )
-                        Checkbox(
-                            modifier = Modifier.size(width = 20.dp, height =35.dp),
-                            checked = enabled,
-                            enabled = true,
-                            onCheckedChange = {
-                                fcs.fc.enabled = it
-                                enabled = it
-                                fcs.ifStartOnce = true // 从下次开始自启
-                            }
-                        )
                     }
                 }
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(20.dp),
-                    horizontalArrangement = Arrangement.spacedBy(20.dp)
-                ) {
-
+                //第二行
+                MyServerRow{
                     val authType = remember { MethodType.values().toList() }
                     var chosedAuthType by remember { mutableStateOf(authType[0]) }
                     Select<MethodType>(
@@ -308,12 +325,57 @@ fun ServerSideScreen(
                         MethodType.OIDC -> TODO()
                     }
                 }
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(20.dp),
-                    horizontalArrangement = Arrangement.spacedBy(20.dp)
-                ) {
+                //第三行
+                MyServerRow{
+                    InputNo1(
+                        id = "vhostHTTPPort",
+                        modifier = Modifier.width(200.dp),
+                        title = i18N.getProperty("cg-vhostHTTPPort"),
+                        type = KeyboardType.Text,
+                        currentValue = fcs.fc.vhostHTTPPort?.toString() ?: "",
+                        onValueChange = {
+                            if(it == null || it == ""){
+                                fcs.fc.vhostHTTPPort = null
+                            }else{
+                                fcs.fc.vhostHTTPPort = it.toInt()
+                            }
+                        },
+                        editable = fcs.getIfBusy().not()
+                    )
+                    InputNo1(
+                        id = "vhostHTTPSPort",
+                        modifier = Modifier.width(200.dp),
+                        title = i18N.getProperty("cg-vhostHTTPSPort"),
+                        type = KeyboardType.Text,
+                        currentValue = fcs.fc.vhostHTTPSPort?.toString() ?: "",
+                        onValueChange = {
+                            if(it == null || it == ""){
+                                fcs.fc.vhostHTTPSPort = null
+                            }else{
+                                fcs.fc.vhostHTTPSPort = it.toInt()
+                            }
+                        },
+                        editable = fcs.getIfBusy().not()
+                    )
+                    InputNo1(
+                        id = "vhostHTTPTimeout",
+                        modifier = Modifier.width(200.dp),
+                        title = i18N.getProperty("cg-vhostHTTPTimeout"),
+                        type = KeyboardType.Text,
+                        currentValue = fcs.fc.vhostHTTPTimeout?.toString() ?: "",
+                        onValueChange = {
+                            if(it == null || it == ""){
+                                fcs.fc.vhostHTTPTimeout = null
+                            }else{
+                                fcs.fc.vhostHTTPTimeout = it.toInt()
+                            }
+                        },
+                        editable = fcs.getIfBusy().not()
+                    )
+                }
+
+                //第四行
+                MyServerRow{
                     InputNo1(
                         id = "kcpBindPort",
                         modifier = Modifier.width(200.dp),
@@ -359,6 +421,32 @@ fun ServerSideScreen(
                         },
                         editable = fcs.getIfBusy().not()
                     )
+                    MyCheckBox(
+                        modifier = Modifier.width(width = 50.dp ),
+                        currentValue =fcs.fc.tcpmuxPassthrough,
+                        onValueChange = {
+                            fcs.fc.tcpmuxPassthrough = it
+                        }
+                    ){
+                        Text(
+                            style = fontType,
+                            text = i18N.getProperty("cg-tcpmuxPassthrough"),
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                    MyCheckBox(
+                        modifier = Modifier.width(width = 50.dp ),
+                        currentValue =fcs.fc.detailedErrorsToClient,
+                        onValueChange = {
+                            fcs.fc.detailedErrorsToClient = it
+                        }
+                    ){
+                        Text(
+                            style = fontType,
+                            text = i18N.getProperty("cg-detailedErrorsToClient"),
+                            textAlign = TextAlign.Center
+                        )
+                    }
                 }
             }
 
@@ -366,3 +454,19 @@ fun ServerSideScreen(
     }
 
 } 
+
+
+
+@Composable
+private fun MyServerRow(
+    content: (@Composable () -> Unit) 
+){
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(20.dp),
+        horizontalArrangement = Arrangement.spacedBy(20.dp)
+    ) {
+        content()
+    }
+}
