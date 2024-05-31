@@ -40,6 +40,7 @@ import com.wxfactory.kcps.common.util.i18N
 import com.wxfactory.kcps.frpfun.entity.FrpConfig
 import com.wxfactory.kcps.frpfun.entity.FrpConfigC
 import org.koin.compose.koinInject
+import org.koin.core.module.Module
 import org.koin.core.qualifier.named
 import java.awt.SystemColor.text
 import kotlin.reflect.KMutableProperty
@@ -51,11 +52,11 @@ class AboutTab() : Tab{
     override val options: TabOptions
         @Composable
         get() {
-            val title = "Author"
+            val title = i18N.getProperty("tab-aboutTab")
             val imageVector = rememberVectorPainter( Icons.Outlined.Engineering)
             return TabOptions(
                 index = 7u,
-                title = title,
+                title = i18N.getProperty("tab-aboutTab"),
                 icon = imageVector,
             )
         }
@@ -65,165 +66,6 @@ class AboutTab() : Tab{
     }
 
 }
- 
 
 @Composable
-fun aboutPanel(
-    mainViewModel: ScreenViewModel? = koinInject<ScreenViewModel>(),
-) {
-    Scaffold(){
-        Card(
-            modifier = Modifier.fillMaxSize().padding(it)
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxHeight(0.4f)
-                    .fillMaxWidth(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Image(
-                    modifier = Modifier.scale(0.6f) ,
-                    painter = painterResource("image/wxfactory.jpg"),
-                    contentDescription = "伟行工厂"
-                )
-                Text("伟行工厂制")
-            }
-            Column(
-                modifier = Modifier
-//                    .fillMaxHeight(0.3f)
-                    .fillMaxWidth()
-                    .padding(start = 50.dp, top = 15.dp),
-                horizontalAlignment = Alignment.Start
-            ) {
-                Text(
-                    "版本信息",
-                            style =  MaterialTheme.typography.titleLarge
-                )
-                Divider(thickness=5.dp)
-                
-                Row {
-                    Icon(
-                        modifier = Modifier.scale(0.3f),
-                        imageVector = Icons.Filled.FiberManualRecord,
-                        contentDescription = "版本",
-                    )
-                    Text(
-                        "0.0.1",
-                    )
-                }
-                
-                Row {
-                    Icon(
-                        modifier = Modifier.scale(0.3f),
-                        imageVector = Icons.Filled.FiberManualRecord,
-                        contentDescription = "版本说明",
-                    )
-                    Text(
-                        "当前版本仅提供简单的使用",
-                    )
-                }
-                
-            }
-           
-            Column(
-                modifier = Modifier
-//                    .fillMaxHeight(0.3f)
-                    .fillMaxWidth()
-                    .padding(start = 50.dp, top = 15.dp),
-                horizontalAlignment = Alignment.Start
-            ) {
-                Text(
-                    "支持信息",
-                    style =  MaterialTheme.typography.titleLarge
-                )
-                Divider(thickness=5.dp)
-                Row {
-                    val uriHandler = LocalUriHandler.current
-                    Icon(
-                        modifier = Modifier.scale(0.3f),
-                        imageVector = Icons.Filled.FiberManualRecord,
-                        contentDescription = "版本说明",
-                    )
-                    ClickableText(
-                        text = buildAnnotatedString {
-                            val text ="开源地址 https://github.com/xhvvvv/kcps.git"
-                            append(text)
-                            addStyle(SpanStyle(textDecoration = TextDecoration.Underline), 0, text.length)
-                        },
-                        style = MaterialTheme.typography.bodyLarge,
-                        modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),
-                        onClick = {
-                            uriHandler.openUri("https://github.com/xhvvvv/kcps.git")
-                        }
-                    )
-                } 
-                Row {
-                    Icon(
-                        modifier = Modifier.scale(0.3f),
-                        imageVector = Icons.Filled.FiberManualRecord,
-                        contentDescription = "版本说明",
-                    )
-                    Text(
-                        "联系我 wj1939146725@gmail.com",
-                    )
-                }
-            }
-
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 50.dp, top = 15.dp),
-                horizontalAlignment = Alignment.Start
-            ) {
-                Text(
-                    "问题说明",
-                    style =  MaterialTheme.typography.titleLarge
-                )
-                Divider(thickness=5.dp)
-                Row {
-                    Icon(
-                        modifier = Modifier.scale(0.3f),
-                        imageVector = Icons.Filled.FiberManualRecord,
-                        contentDescription = "1",
-                    )
-                    Text(
-                        "转换格式目前仅支持TOML格式，请不要选择其他格式",
-                    )
-                } 
-                
-                Row {
-                    Icon(
-                        modifier = Modifier.scale(0.3f),
-                        imageVector = Icons.Filled.FiberManualRecord,
-                        contentDescription = "2",
-                    )
-                    Text(
-                        "加密形式目前仅支持Token格式，请不要选择其它加密格式",
-                    )
-                }
-                Row {
-                    Icon(
-                        modifier = Modifier.scale(0.3f),
-                        imageVector = Icons.Filled.FiberManualRecord,
-                        contentDescription = "2",
-                    )
-                    Text(
-                        "当前强制独立运行,即每个配置都会启动一个单独的进程",
-                    )
-                }
-                Row {
-                    Icon(
-                        modifier = Modifier.scale(0.3f),
-                        imageVector = Icons.Filled.FiberManualRecord,
-                        contentDescription = "2",
-                    )
-                    Text(
-                        "当前支持的配置类型有：TCP、STCP、UDP、XTCP",
-                    )
-                }
-            }
-        }
-    }
-}
- 
+expect fun aboutPanel(mainViewModel: ScreenViewModel? = koinInject<ScreenViewModel>()) : Unit

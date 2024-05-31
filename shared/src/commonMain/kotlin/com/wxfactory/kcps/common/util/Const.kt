@@ -7,3 +7,6 @@ import java.util.*
 val i18N : Properties by lazy {
      Props.getProp("in18-Zn.properties", StandardCharsets.UTF_8).toProperties()
 }
+val someStatic : Properties by lazy {
+     Props.getProp("test.properties", StandardCharsets.UTF_8).toProperties()
+}

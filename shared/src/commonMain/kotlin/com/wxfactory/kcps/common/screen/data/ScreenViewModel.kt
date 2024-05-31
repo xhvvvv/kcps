@@ -5,6 +5,7 @@ import cafe.adriel.voyager.core.model.screenModelScope
 import cn.hutool.core.io.FileUtil
 import cn.hutool.core.util.SerializeUtil
 import com.wxfactory.kcps.common.core.repository.FccService
+import com.wxfactory.kcps.common.core.repository.FcsService
 import com.wxfactory.kcps.common.core.repository.SettingService
 import com.wxfactory.kcps.frpfun.entity.FrpConfigC
 import com.wxfactory.kcps.frpfun.entity.FrpConfigS
@@ -12,9 +13,13 @@ import kotlinx.coroutines.flow.*
 import java.io.File
 import java.util.ArrayList
 
+/**
+ * 这里是处理屏幕所需要的所有的数据
+ */
 class ScreenViewModel(
     private val settingsRepository: SettingService,
-    private val fccService: FccService ,
+    private val fccService: FccService,
+    private val fcsService: FcsService,
 ) : ScreenModel {
 
     //app的风格
@@ -47,23 +52,6 @@ class ScreenViewModel(
     fun setConfType( type : String) {
         settingsRepository.saveFccTypes(type)
     }
-//    private final val fcsStorge :String = "fcs.list"
-//    val fcs : MutableList<FrpConfigC> by lazy {
-//        val f = File(fcsStorge)
-//        if (FileUtil.exist(f)){
-//            val shit = SerializeUtil.deserialize<MutableList<FrpConfigC> >(FileUtil.readBytes(f))
-//            shit
-//        }else
-//            mutableListOf()
-//    }
-//    fun save( fc : List<FrpConfigC>) {
-//        val f = File(fcsStorge)
-//        val array = ArrayList<FrpConfigC>().apply {
-//            this.addAll(fc)
-//        }
-//        val fcsS  = SerializeUtil.serialize(array)
-//        FileUtil.writeBytes(fcsS,f)
-//    }
 
     val fcs : List<FrpConfigC>? = fccService.getAllFcc() 
     fun save( fc : FrpConfigC) {
@@ -73,6 +61,8 @@ class ScreenViewModel(
         fccService.saveAllFcc(fc)
     }
     
-    val fcServer : FrpConfigS? = null
-
+    val fcServer : FrpConfigS? = fcsService.getServer()
+    fun saveFcsServer( fcs : FrpConfigS ) {
+        fcsService.saveFcs(fcs)
+    }
 }

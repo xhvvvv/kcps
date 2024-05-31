@@ -7,6 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class XtcpFcc extends TcpFcc {
+    private static final long serialVersionUID = 4744989927558045363L;
     private String side ;
     private String serverName;
     private String secretKey;

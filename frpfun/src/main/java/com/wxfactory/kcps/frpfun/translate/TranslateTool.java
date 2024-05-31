@@ -1,6 +1,7 @@
 package com.wxfactory.kcps.frpfun.translate;
 
 import cn.hutool.core.io.FileUtil;
+import com.wxfactory.kcps.frpfun.entity.ConfigTypes;
 import com.wxfactory.kcps.frpfun.entity.FrpConfig;
 import com.wxfactory.kcps.frpfun.entity.FrpConfigC;
 import com.wxfactory.kcps.frpfun.entity.FrpConfigS;

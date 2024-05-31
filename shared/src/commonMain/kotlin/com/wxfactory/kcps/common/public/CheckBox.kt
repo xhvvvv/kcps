@@ -28,7 +28,10 @@ fun  CheckBox(
     label: (@Composable () -> Unit)? = null
 ) {
     var chosed by remember { mutableStateOf(currentValue) }
-    Column {
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         if (label != null) {
             label()
             Spacer(modifier = Modifier.height(4.dp))

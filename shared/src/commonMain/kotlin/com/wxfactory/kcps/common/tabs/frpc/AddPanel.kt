@@ -1,4 +1,4 @@
-package com.wxfactory.kcps.common.tabs
+package com.wxfactory.kcps.common.tabs.frpc
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -20,8 +20,8 @@ import com.wxfactory.kcps.frpfun.entity.FrpcTypes
 import com.wxfactory.kcps.frpfun.entity.auths.MethodType
 import com.wxfactory.kcps.frpfun.entity.auths.TokenAuth
 import com.wxfactory.kcps.frpfun.entity.frpconfigcs.StcpFcc
-import com.wxfactory.kcps.frpfun.entity.frpconfigcs.TcpFcc
 import com.wxfactory.kcps.frpfun.entity.frpconfigcs.XtcpFcc
+import com.wxfactory.kcps.frpfun.util.CommonUtil
 
 /**kind 2自定义的*/
 private data class Address(val ip: String, val port: Int?, val kind: Int, val fc: FrpConfig?) {
@@ -33,13 +33,13 @@ private data class Address(val ip: String, val port: Int?, val kind: Int, val fc
         }
     }
 }
-
 class AddPanel(
     val fcs: MutableList<FrpConfigCCompose<FrpConfigC>>,
     val doneCallBack: (tfc: FrpConfigC) -> Unit
 ) : Screen {
     @Composable
     override fun Content() {
+        val fontType = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.SemiBold)
         Form {
             val formState = LocalFormState.current
             LaunchedEffect(Unit){
@@ -54,34 +54,37 @@ class AddPanel(
                     )
                 }
             }
-            var chosed by remember { mutableStateOf(FrpcTypes.TCP ) }
-            var name by remember { mutableStateOf("默认") }
-            var ip by remember { mutableStateOf("localhost") }
-            var port by remember { mutableStateOf("8080") }
-            var cs by remember { mutableStateOf(false) }
-            val allServer: List<Address> by remember(fcs.size) {
-                derivedStateOf {
-                    val thisList: MutableList<Address> = mutableListOf()
-                    fcs.mapTo(thisList) { x ->
-                        Address(x.fc.host, x.fc.port, 1, x.fc)
-                    }
-                    thisList.add(Address(ip = "自定义", port = null, kind = 2, null))
-                    thisList.distinctBy { x -> "${x.ip}:${x.port}" }
+            val allServer: List<Address> = remember(fcs.size) {
+                val thisList: MutableList<Address> = mutableListOf()
+                fcs.mapTo(thisList) { x ->
+                    Address(x.fc.host, x.fc.port, 1, x.fc)
                 }
+                thisList.add(Address(ip = "自定义", port = null, kind = 2, null))
+                thisList.distinctBy { x -> "${x.ip}:${x.port}" }
             }
             var chosedAddress: Address by remember { mutableStateOf(allServer.first()) }
-
             val authType = remember {
                 MethodType.values().toList()
             }
-            var chosedAuthType by remember { mutableStateOf(authType[0]) }
+            var chosedAuthType by remember { mutableStateOf(authType.first()) }
+
+            val frpcTypes = remember {
+                FrpcTypes.values().toList()
+            }
+            
+            var chosed  by remember { mutableStateOf(FrpcTypes.TCP ) }
+            var name    by remember { mutableStateOf("默认") }
+            var ip      by remember { mutableStateOf("localhost") }
+            var port    by remember { mutableStateOf("10245") }
+            var cs      by remember { mutableStateOf(false) }
             var token by remember { mutableStateOf("") }
             Scaffold(
                 modifier = Modifier.fillMaxHeight(0.6f),
+                containerColor = MaterialTheme.colorScheme.background,
                 bottomBar = {
                     Card {
                         Row(
-                            modifier = Modifier.fillMaxWidth().padding(5.dp),
+                            modifier = Modifier.fillMaxWidth().padding(10.dp),
                             horizontalArrangement = Arrangement.End, // 从末尾开始排列
                             verticalAlignment = Alignment.CenterVertically
                         ) {
@@ -99,6 +102,7 @@ class AddPanel(
                                         
                                         tfc.name = name
                                         tfc.authentication = TokenAuth(chosedAuthType, token)
+                                        tfc.id = CommonUtil.generateId()
                                         if( tfc is XtcpFcc  ){
                                             tfc.side = if(cs) FrpConfigC.W_S_S else FrpConfigC.W_S_C
                                         }
@@ -120,18 +124,20 @@ class AddPanel(
                 }
             ) {
                 Card(
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(it)
+                    ,
                 ) {
                     addRow {
                         Select<FrpcTypes>(
                             modifier = Modifier.fillMaxWidth(0.3f),
-                            options = FrpcTypes.values().toList(),
+                            options = frpcTypes,
                             onOptionSelected = { ii -> chosed = ii  }
                         ) {
                             Text(
-                                style = MaterialTheme.typography.labelLarge.copy(
-                                    fontWeight = FontWeight.SemiBold,
-                                ), text = "选择连接类型"
+                                style = fontType,
+                                text = "选择连接类型"
                             )
                         }
                         InputNo1(
@@ -153,16 +159,15 @@ class AddPanel(
                                 }
                             ){
                                 Text(
-                                    style = MaterialTheme.typography.labelLarge.copy(
-                                        fontWeight = FontWeight.SemiBold,
-                                    ), text = "服务端"
+                                    style = fontType, 
+                                    text = "服务端"
                                 )
                             }
                         }else{
                             cs = false
                         }
                     }
-
+                    Divider()
                     addRow {
                         Select<Address>(
                             modifier = Modifier.fillMaxWidth(0.3f),
@@ -172,15 +177,14 @@ class AddPanel(
                             onOptionSelected = { address -> chosedAddress = address }
                         ) {
                             Text(
-                                style = MaterialTheme.typography.labelLarge.copy(
-                                    fontWeight = FontWeight.SemiBold,
-                                ), text = "选择公网host"
+                                style = fontType, 
+                                text = "选择公网host"
                             )
                         }
 
                         if (chosedAddress.kind == 2) {
                             InputNo1(
-                                modifier = Modifier.fillMaxWidth(0.3f),
+                                modifier = Modifier.fillMaxWidth(0.5f), //占剩下的50%
                                 title = "公网host",
                                 type = KeyboardType.Text,
                                 currentValue = ip ,
@@ -190,7 +194,7 @@ class AddPanel(
                             )
                             InputNo1(
                                 id="port",
-                                modifier = Modifier.fillMaxWidth(0.3f),
+//                                modifier = Modifier.fillMaxWidth(0.3f),
                                 title = "公网port",
                                 type = KeyboardType.Number,
                                 currentValue = port,
@@ -209,16 +213,15 @@ class AddPanel(
                             onOptionSelected = { type -> chosedAuthType = type }
                         ) {
                             Text(
-                                style = MaterialTheme.typography.labelLarge.copy(
-                                    fontWeight = FontWeight.SemiBold,
-                                ), text = "认证方式"
+                                style = fontType,
+                                text = "认证方式"
                             )
                         }
 
                         when (chosedAuthType) {
                             MethodType.TOKEN -> {
                                 InputNo1(
-                                    modifier = Modifier.fillMaxWidth(0.7f),
+//                                    modifier = Modifier.fillMaxWidth(0.7f),
                                     title = "密匙",
                                     type = KeyboardType.Password,
                                     currentValue = token,
@@ -243,8 +246,8 @@ private fun addRow(
     content: @Composable () -> Unit
 ) {
     Row(
-        modifier = Modifier.padding(6.dp),
-        horizontalArrangement = Arrangement.spacedBy(5.dp)
+        modifier = Modifier.padding(12.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         content()
     }

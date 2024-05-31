@@ -48,22 +48,47 @@ public class TomlSTTP implements ToTypeProcessor<FrpConfigS> {
         
         sb.append("bindPort = ")        .append( port )    .append("\n");
         if(frp.getKcpBindPort()!=null){
-            sb.append("kcpBindPort = ").append( frp.getKcpBindPort() ) ;
+            sb.append("kcpBindPort = ").append( frp.getKcpBindPort() )  .append("\n");
         }
        
         if(frp.getQuicBindPort()!=null){
-            sb.append("quicBindPort = ").append( frp.getQuicBindPort() ) ;
+            sb.append("quicBindPort = ").append( frp.getQuicBindPort() )  .append("\n");
         }
         
         if (frp.getTcpmuxHTTPConnectPort()!=null){
-            sb.append("tcpmuxHTTPConnectPort = ").append( frp.getTcpmuxHTTPConnectPort() ) ;
+            sb.append("tcpmuxHTTPConnectPort = ").append( frp.getTcpmuxHTTPConnectPort() )  .append("\n");
         }
+        if (frp.getVhostHTTPPort()!=null){
+            sb.append("vhostHTTPPort = ").append( frp.getVhostHTTPPort() )  .append("\n");
+        }
+        if (frp.getVhostHTTPSPort()!=null){
+            sb.append("vhostHTTPSPort = ").append( frp.getVhostHTTPSPort() )  .append("\n");
+        }
+        if (frp.getVhostHTTPTimeout()!=null){
+            sb.append("vhostHTTPTimeout = ").append( frp.getVhostHTTPTimeout() )  .append("\n");
+        }
+        
+        if (frp.getTcpmuxHTTPConnectPort()!=null){
+            sb.append("tcpmuxHTTPConnectPort = ").append( frp.getTcpmuxHTTPConnectPort() )  .append("\n") ;
+        }
+        
+        if (frp.getTcpmuxPassthrough()!=null){
+            sb.append("tcpmuxPassthrough = ").append( frp.getTcpmuxPassthrough() )  .append("\n");
+        }
+        
+        if (frp.getDetailedErrorsToClient()!=null){
+            sb.append("detailedErrorsToClient = ").append( frp.getDetailedErrorsToClient() )  .append("\n");
+        }
+        
+        if (frp.getMaxPortsPerClient()!=null){
+            sb.append("maxPortsPerClient = ").append( frp.getMaxPortsPerClient() )  .append("\n");
+        }
+        
         
         if (frp.getAuthentication()!=null){
             if (frp.getAuthentication() instanceof TokenAuth){
                 sb.append("auth.method = ")   .append("\"")       .append(MethodType.TOKEN.name().toLowerCase() )    .append("\"\n");
                 sb.append("auth.token = ")   .append("\"")       .append( ((TokenAuth) frp.getAuthentication()).getToken() )    .append("\"\n");
-                
             }
         }
         

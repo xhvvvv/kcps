@@ -9,15 +9,18 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.awt.ComposeWindow
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
+import com.wxfactory.kcps.common.public.LocalAlertDialog
 import com.wxfactory.kcps.common.public.Select
 import com.wxfactory.kcps.common.screen.data.ScreenViewModel
-import com.wxfactory.kcps.frpfun.translate.ConfigTypes
+import com.wxfactory.kcps.common.util.i18N
+import com.wxfactory.kcps.frpfun.entity.ConfigTypes
 import org.koin.compose.koinInject
 import java.awt.FileDialog
 
@@ -26,11 +29,11 @@ class SettingTab() : Tab{
     override val options: TabOptions
         @Composable
         get() {
-            val title = "Setting"
+            val title = i18N.getProperty("tab-settingTab")
             val imageVector = rememberVectorPainter( Icons.Outlined.Settings)
             return TabOptions(
                 index = 1u,
-                title = title,
+                title = i18N.getProperty("tab-settingTab"),
                 icon = imageVector,
             )
         }
@@ -48,7 +51,7 @@ private fun settingPanel(
 ) {
     var frpcLocation:String by remember{ mutableStateOf(mainViewModel.exeFile?:"") }
     var frpsLocation:String by remember{ mutableStateOf(mainViewModel.exeSFile?:"") }
-    
+    val localAlertDialog = LocalAlertDialog.current
     Scaffold(
         bottomBar = {
             Row(
@@ -58,6 +61,7 @@ private fun settingPanel(
                 Button(onClick ={
                     mainViewModel.setExeLocation(frpcLocation)
                     mainViewModel.setExeSLocation(frpsLocation)
+                    localAlertDialog.alert("保存成功！")
                 }){
                     Text("确定保存")
                 }

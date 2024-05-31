@@ -32,6 +32,7 @@ version = "1.0.6"
 println("cao"+project.extensions.getByType(VersionPluginExtension::class).version.get())
 
 compose{
+    
     desktop {
         application {
         
@@ -64,6 +65,14 @@ compose{
                     this.iconFile.set(file("icon.svg"))
                     menuGroup = "menuGroup-xhvvvv"
                     upgradeUuid = "5ac63736-d8c7-4a65-1235-6870df88ddfe"
+                }
+                
+                linux{
+                    this.packageVersion =  project.extensions.getByType(VersionPluginExtension::class).version.get()
+                    this.iconFile.set(file("icon.svg"))
+                    menuGroup = "menuGroup-xhvvvv"
+                    this.debPackageVersion = project.extensions.getByType(VersionPluginExtension::class).version.get()
+                    this.rpmPackageVersion = project.extensions.getByType(VersionPluginExtension::class).version.get()
                 }
             }
             buildTypes{

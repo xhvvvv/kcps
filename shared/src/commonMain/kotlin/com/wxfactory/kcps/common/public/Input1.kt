@@ -1,5 +1,6 @@
 package com.wxfactory.kcps.common.public
 
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -8,12 +9,14 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.wxfactory.kcps.common.public.validate.ValidataeObject
 import com.wxfactory.kcps.common.public.validate.Validator
 
@@ -26,11 +29,14 @@ fun InputNo1(
     id : String? = null , //校验的唯一标识
     modifier: Modifier = Modifier,
     title: String,
+    labelTextStyle: TextStyle = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.SemiBold),
     type : KeyboardType = KeyboardType.Text,
     currentValue: String,
     onValueChange: (String?) -> Unit,
-    editable : Boolean = true
+    editable : Boolean = true,
+    placeholder: String = ""
 ) {
+    val fontType = MaterialTheme.typography.bodySmall.copy(color = Color.LightGray)
     val formState = LocalFormState.current
     val date = remember {  ValidataeObject(currentValue)  }
     
@@ -46,18 +52,14 @@ fun InputNo1(
             formState.unRegiest(id)
         }
     }
-    
-    BloomInputTextField(
+
+    MyInputTextField(
         modifier = modifier,
-        textStyle = MaterialTheme.typography.bodySmall.copy(
-            textAlign = TextAlign.Start,
-        ),
+        textStyle = MaterialTheme.typography.bodySmall,
         label = {
             Text(
                 text = title,
-                style = MaterialTheme.typography.labelLarge.copy(
-                    fontWeight = FontWeight.SemiBold,
-                ),
+                style = labelTextStyle,
             )
         },
         value = date,
@@ -70,13 +72,19 @@ fun InputNo1(
             }
         },
         keyboardOptions = KeyboardOptions( keyboardType = type),
-        editable =editable
+        editable =editable,
+        placeholder = { 
+            Text(
+                text = placeholder ,
+                style = fontType
+            )
+        }
     )
 }
 
 
 @Composable
-internal fun BloomInputTextField(
+internal fun MyInputTextField(
     modifier: Modifier = Modifier,
     label: (@Composable () -> Unit)? = null,
     placeholder: (@Composable () -> Unit)? = null,
@@ -99,7 +107,9 @@ internal fun BloomInputTextField(
         }
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth()
-                .defaultMinSize(minWidth = 40.dp),
+                .defaultMinSize(minWidth = 40.dp)
+                .scale(scaleY = 0.8f, scaleX = 1f)
+            ,
             value = value.value?:"",
             onValueChange = {
                 value.value = it

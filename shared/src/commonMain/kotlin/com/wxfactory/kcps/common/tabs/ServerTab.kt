@@ -1,17 +1,23 @@
 package com.wxfactory.kcps.common.tabs
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.screenModelScope
 import cafe.adriel.voyager.navigator.tab.Tab
@@ -21,6 +27,7 @@ import com.wxfactory.kcps.common.core.entity.FrpConfigCCompose
 import com.wxfactory.kcps.common.platform.frpfun.startFrp
 import com.wxfactory.kcps.common.platform.frpfun.stopFrp
 import com.wxfactory.kcps.common.public.*
+import com.wxfactory.kcps.common.public.validate.NnullValidator
 import com.wxfactory.kcps.common.public.validate.intValidator
 import com.wxfactory.kcps.common.public.validate.nnullValidator
 import com.wxfactory.kcps.common.screen.data.ScreenViewModel
@@ -30,23 +37,23 @@ import com.wxfactory.kcps.frpfun.entity.FrpConfig
 import com.wxfactory.kcps.frpfun.entity.FrpConfigS
 import com.wxfactory.kcps.frpfun.entity.auths.MethodType
 import com.wxfactory.kcps.frpfun.entity.auths.TokenAuth
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import com.wxfactory.kcps.frpfun.util.CommonUtil
+import kotlinx.coroutines.*
+import kotlinx.coroutines.sync.withLock
 import org.koin.compose.koinInject
 import org.koin.core.qualifier.named
 import java.util.*
-
+import com.wxfactory.kcps.common.public.CheckBox as MyCheckBox
 
 class ServerTab() : Tab {
     override val options: TabOptions
         @Composable
         get() {
-            val title = "服务端"
+            val title =  i18N.getProperty("tab-serverTab")
             val imageVector = rememberVectorPainter(Icons.Outlined.Dns)
             return TabOptions(
                 index = 1u,
-                title = title,
+                title = i18N.getProperty("tab-serverTab"),
                 icon = imageVector,
             )
         }
@@ -64,6 +71,7 @@ fun ServerSideScreen(
     mainViewModel: ScreenViewModel? = koinInject<ScreenViewModel>(),
     fcs: FrpConfigCCompose<FrpConfigS> = koinInject<FrpConfigCCompose<FrpConfigS>>(named("fcServer")),
 ) {
+    val fontType = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.SemiBold)
     val snackbarHostState = remember { SnackbarHostState() }
     val run = rememberCoroutineScope()
     val alert : (String) -> Unit = remember {
@@ -77,15 +85,6 @@ fun ServerSideScreen(
                     snackbarHostState.currentSnackbarData?.dismiss()
                 }
             }
-        }
-    }
-    LaunchedEffect(Unit){
-        //注册回调
-        fcs.exeStartCallBack = {
-            fcs.ifrunnig.value = true
-        }
-        fcs.exeCallBack = {
-            fcs.ifrunnig.value = false
         }
     }
 
@@ -109,6 +108,19 @@ fun ServerSideScreen(
                 "pass" useValidators listOf(
                     nnullValidator
                 )
+                "maxPortsPerClient" useValidators listOf(
+                    nnullValidator,
+                    intValidator
+                )
+                "vhostHTTPPort" useValidators listOf(
+                    intValidator
+                )
+                "vhostHTTPSPort" useValidators listOf(
+                    intValidator
+                )
+                "vhostHTTPTimeout" useValidators listOf(
+                    intValidator
+                )
             }
         }
         
@@ -117,41 +129,72 @@ fun ServerSideScreen(
                 SnackbarHost(hostState = snackbarHostState)
             },
             bottomBar = {
-                BottomAppBar(
-                    floatingActionButton = {
-                        FloatingActionButton(
-                            onClick = {
-                                run.launch {
-                                    delay(300)
-                                    if (!formState.virfyAll()){
+                //启动和关闭配置的逻辑
+                val runLogic :  ( Boolean) -> Unit = remember(Unit) {
+                    //注册回调
+                    fcs.exeStartCallBack = {
+                        fcs.ifrunnig.value = true
+                    }
+                    fcs.exeCallBack = {
+                        fcs.ifrunnig.value = false
+                    }
+
+                    { it ->
+                        run.launch {
+                            fcs.ifLoading.value = true
+                            try {
+                                fcs.mutex.withLock {
+                                    if (fcs.fc.id.isNullOrBlank()){
+                                        fcs.fc.id = CommonUtil.generateId()
+                                    }
+                                    if (!formState.virfyAll()) {
                                         alert("无法启动，请确保参数填写正常！")
                                         this.cancel()
                                         return@launch
                                     }
-                                    if(fcs.ifrunnig.value.not()){
-                                        //开启
-                                        startFrp(fcs as FrpConfigCCompose<FrpConfig>)
-                                        run.launch {
-                                            if(fcs.ec != null && fcs.ec?.executeWatchdog !=null && fcs.ec?.executeWatchdog?.isWatching == true){
-                                                alert("启动成功！")
-                                            }else {
-                                                alert("启动失败！")
-                                            }
+                                    if (it) {
+                                        val con = startFrp(fcs as FrpConfigCCompose<FrpConfig>)
+                                        if (con.isExcuteSuccess()) {
+                                            //开启
+                                            alert("启动成功！")
+                                        } else {
+                                            alert(con.remark ?: "启动失败！")
                                         }
-                                    }else{
+                                    } else {
                                         //关闭
                                         stopFrp(fcs as FrpConfigCCompose<FrpConfig>)
                                         alert("关闭完毕！")
                                     }
                                 }
+                            }finally {
+                                fcs.ifLoading.value = false
+                            }
+                        }
+
+                    }
+                }
+
+                BottomAppBar(
+                    floatingActionButton = {
+                        FloatingActionButton(
+                            modifier = Modifier.size(50.dp,50.dp),
+                            onClick = {
+                                runLogic(fcs.getIfBusy().not())
                             },
                             containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
                             elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
                         ) {
                             if(fcs.ifrunnig.value){
-                                Icon(Icons.Filled.PauseCircleOutline, "关闭")
+                                Icon(
+                                    modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.primary),
+                                    imageVector = Icons.Filled.PauseCircleOutline,
+                                    contentDescription ="关闭")
                             }else{
-                                Icon(Icons.Filled.PlayCircleOutline, "启动")
+                                Icon(
+                                    modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.error),
+                                    imageVector =  Icons.Filled.PlayCircleOutline, 
+                                    contentDescription = "启动"
+                                )
                             }
                         }
                     },
@@ -161,19 +204,17 @@ fun ServerSideScreen(
                 )
             }
         ) { innerPadding ->
+            val scrollState = rememberScrollState()
             Card(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(innerPadding),
+                    .padding(innerPadding)
+                    .verticalScroll(scrollState),
                 shape =  RoundedCornerShape(0.dp),
             ) {
 
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(20.dp),
-                    horizontalArrangement = Arrangement.spacedBy(20.dp)
-                ) {
+                //第一行
+                MyServerRow {
                     InputNo1(
                         id = "name",
                         modifier = Modifier.width(200.dp),
@@ -183,7 +224,7 @@ fun ServerSideScreen(
                         onValueChange = {
                             fcs.fc.name = it ?: ""
                         },
-                        editable = fcs.ifrunnig.value.not()
+                        editable = fcs.getIfBusy().not()
                     )
 
                     InputNo1(
@@ -195,7 +236,7 @@ fun ServerSideScreen(
                         onValueChange = {
                             fcs.fc.host = it ?: ""
                         },
-                        editable = fcs.ifrunnig.value.not()
+                        editable = fcs.getIfBusy().not()
                     )
 
                     InputNo1(
@@ -211,30 +252,55 @@ fun ServerSideScreen(
                                 fcs.fc.port = it.toInt()
                             }
                         },
-                        editable = fcs.ifrunnig.value.not()
+                        editable = fcs.getIfBusy().not()
                     )
+
+                    InputNo1(
+                        id = "maxPortsPerClient",
+                        modifier = Modifier.width(200.dp),
+                        title = i18N.getProperty("cg-maxPortsPerClient"),
+                        type = KeyboardType.Number,
+                        currentValue = fcs.fc.maxPortsPerClient?.toString() ?: "",
+                        onValueChange = {
+                            if(it == null || it == ""){
+                                fcs.fc.maxPortsPerClient = null
+                            }else{
+                                fcs.fc.maxPortsPerClient = it.toInt()
+                            }
+                        },
+                        editable = fcs.getIfBusy().not(),
+                        placeholder = "0为不限制"
+                    )
+                    MyCheckBox(
+                        modifier = Modifier.width(width = 50.dp ),
+                        currentValue = fcs.fc.enabled,
+                        onValueChange = {
+                            fcs.fc.enabled = it
+                            fcs.ifStartOnce = true // 从下次开始自启
+                        }
+                    ){
+                        Text(
+                            style = fontType,
+                            text = "自启",
+                            textAlign = TextAlign.Center
+                        )
+                    }
                 }
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(20.dp),
-                    horizontalArrangement = Arrangement.spacedBy(20.dp)
-                ) {
-
+                //第二行
+                MyServerRow{
                     val authType = remember { MethodType.values().toList() }
                     var chosedAuthType by remember { mutableStateOf(authType[0]) }
                     Select<MethodType>(
                         modifier = Modifier.width(200.dp),
                         options = authType,
+                        enabled = fcs.getIfBusy().not(),
                         selectedOptionShow = { it.name },
                         optionSelectedShow = { it.name },
                         onOptionSelected = { type -> chosedAuthType = type }
                     ) {
                         Text(
-                            style = MaterialTheme.typography.labelLarge.copy(
-                                fontWeight = FontWeight.SemiBold,
-                            ), text = "认证方式"
+                            style = fontType,
+                            text = "认证方式"
                         )
                     }
 
@@ -252,18 +318,64 @@ fun ServerSideScreen(
                                 onValueChange = {
                                     (fcs.fc.authentication as TokenAuth).token = it ?: ""
                                 },
+                                editable = fcs.getIfBusy().not()
                             )
                         }
 
                         MethodType.OIDC -> TODO()
                     }
                 }
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(20.dp),
-                    horizontalArrangement = Arrangement.spacedBy(20.dp)
-                ) {
+                //第三行
+                MyServerRow{
+                    InputNo1(
+                        id = "vhostHTTPPort",
+                        modifier = Modifier.width(200.dp),
+                        title = i18N.getProperty("cg-vhostHTTPPort"),
+                        type = KeyboardType.Text,
+                        currentValue = fcs.fc.vhostHTTPPort?.toString() ?: "",
+                        onValueChange = {
+                            if(it == null || it == ""){
+                                fcs.fc.vhostHTTPPort = null
+                            }else{
+                                fcs.fc.vhostHTTPPort = it.toInt()
+                            }
+                        },
+                        editable = fcs.getIfBusy().not()
+                    )
+                    InputNo1(
+                        id = "vhostHTTPSPort",
+                        modifier = Modifier.width(200.dp),
+                        title = i18N.getProperty("cg-vhostHTTPSPort"),
+                        type = KeyboardType.Text,
+                        currentValue = fcs.fc.vhostHTTPSPort?.toString() ?: "",
+                        onValueChange = {
+                            if(it == null || it == ""){
+                                fcs.fc.vhostHTTPSPort = null
+                            }else{
+                                fcs.fc.vhostHTTPSPort = it.toInt()
+                            }
+                        },
+                        editable = fcs.getIfBusy().not()
+                    )
+                    InputNo1(
+                        id = "vhostHTTPTimeout",
+                        modifier = Modifier.width(200.dp),
+                        title = i18N.getProperty("cg-vhostHTTPTimeout"),
+                        type = KeyboardType.Text,
+                        currentValue = fcs.fc.vhostHTTPTimeout?.toString() ?: "",
+                        onValueChange = {
+                            if(it == null || it == ""){
+                                fcs.fc.vhostHTTPTimeout = null
+                            }else{
+                                fcs.fc.vhostHTTPTimeout = it.toInt()
+                            }
+                        },
+                        editable = fcs.getIfBusy().not()
+                    )
+                }
+
+                //第四行
+                MyServerRow{
                     InputNo1(
                         id = "kcpBindPort",
                         modifier = Modifier.width(200.dp),
@@ -277,7 +389,7 @@ fun ServerSideScreen(
                                 fcs.fc.kcpBindPort = it.toInt()
                             }
                         },
-                        editable = fcs.ifrunnig.value.not()
+                        editable = fcs.getIfBusy().not()
                     )
                     InputNo1(
                         id = "quicBindPort",
@@ -292,7 +404,7 @@ fun ServerSideScreen(
                                 fcs.fc.quicBindPort = it.toInt()
                             }
                         },
-                        editable = fcs.ifrunnig.value.not()
+                        editable = fcs.getIfBusy().not()
                     )
                     InputNo1(
                         id = "tcpmuxHTTPConnectPort",
@@ -307,8 +419,34 @@ fun ServerSideScreen(
                                 fcs.fc.tcpmuxHTTPConnectPort = it.toInt()
                             }
                         },
-                        editable = fcs.ifrunnig.value.not()
+                        editable = fcs.getIfBusy().not()
                     )
+                    MyCheckBox(
+                        modifier = Modifier.width(width = 50.dp ),
+                        currentValue =fcs.fc.tcpmuxPassthrough,
+                        onValueChange = {
+                            fcs.fc.tcpmuxPassthrough = it
+                        }
+                    ){
+                        Text(
+                            style = fontType,
+                            text = i18N.getProperty("cg-tcpmuxPassthrough"),
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                    MyCheckBox(
+                        modifier = Modifier.width(width = 50.dp ),
+                        currentValue =fcs.fc.detailedErrorsToClient,
+                        onValueChange = {
+                            fcs.fc.detailedErrorsToClient = it
+                        }
+                    ){
+                        Text(
+                            style = fontType,
+                            text = i18N.getProperty("cg-detailedErrorsToClient"),
+                            textAlign = TextAlign.Center
+                        )
+                    }
                 }
             }
 
@@ -316,3 +454,19 @@ fun ServerSideScreen(
     }
 
 } 
+
+
+
+@Composable
+private fun MyServerRow(
+    content: (@Composable () -> Unit) 
+){
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(20.dp),
+        horizontalArrangement = Arrangement.spacedBy(20.dp)
+    ) {
+        content()
+    }
+}
