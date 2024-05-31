@@ -25,6 +25,7 @@ interface SettingService {
     fun saveExesLocation(file:String?)
 
     fun getFccTypes(): Flow<String?>
+    fun getFccTypeStr(): String?
     fun saveFccTypes(file:String?)
 
     suspend fun ifReadGuide(con : Boolean)

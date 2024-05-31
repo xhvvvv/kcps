@@ -49,6 +49,10 @@ class ScreenViewModel(
         started = SharingStarted.WhileSubscribed(), //通知策略，表示必须有一个订阅才会开始发送
         initialValue = null,
     )
+    fun getConfType( ): String? {
+        return settingsRepository.getFccTypeStr()
+    }
+
     fun setConfType( type : String) {
         settingsRepository.saveFccTypes(type)
     }

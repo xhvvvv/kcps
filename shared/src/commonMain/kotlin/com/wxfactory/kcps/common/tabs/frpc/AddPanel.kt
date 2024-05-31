@@ -9,6 +9,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
+import cn.hutool.core.io.FileUtil
 import com.wxfactory.kcps.common.core.entity.FrpConfigCCompose
 import com.wxfactory.kcps.common.public.*
 import com.wxfactory.kcps.common.public.validate.MaxLValidator
@@ -22,6 +23,7 @@ import com.wxfactory.kcps.frpfun.entity.auths.TokenAuth
 import com.wxfactory.kcps.frpfun.entity.frpconfigcs.StcpFcc
 import com.wxfactory.kcps.frpfun.entity.frpconfigcs.XtcpFcc
 import com.wxfactory.kcps.frpfun.util.CommonUtil
+import java.nio.charset.StandardCharsets
 
 /**kind 2自定义的*/
 private data class Address(val ip: String, val port: Int?, val kind: Int, val fc: FrpConfig?) {
@@ -41,6 +43,7 @@ class AddPanel(
     override fun Content() {
         val fontType = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.SemiBold)
         Form {
+            val localAlertDialog = LocalAlertDialog.current
             val formState = LocalFormState.current
             LaunchedEffect(Unit){
                 //注册校验器
@@ -91,27 +94,32 @@ class AddPanel(
                             FilledTonalButton(
                                 onClick = {
                                     if(formState.virfyAll()){
-                                        val tfc: FrpConfigC =  
-                                            FrpConfigC.mapperClass.get(chosed)!!
-                                                .getDeclaredConstructor(
-                                                    String::class.java,
-                                                    Int::class.javaPrimitiveType
-                                                ).newInstance(
-                                                    ip,port.toInt()
-                                                )
-                                        
-                                        tfc.name = name
-                                        tfc.authentication = TokenAuth(chosedAuthType, token)
-                                        tfc.id = CommonUtil.generateId()
-                                        if( tfc is XtcpFcc  ){
-                                            tfc.side = if(cs) FrpConfigC.W_S_S else FrpConfigC.W_S_C
+                                        try{
+                                            val tfc: FrpConfigC =
+                                                FrpConfigC.mapperClass.get(chosed)!!
+                                                    .getDeclaredConstructor(
+                                                        String::class.java,
+                                                        Int::class.javaPrimitiveType
+                                                    ).newInstance(
+                                                        ip, java.lang.Integer.parseInt(port)  
+                                                    )
+
+                                            tfc.name = name
+                                            tfc.authentication = TokenAuth(chosedAuthType, token)
+                                            tfc.id = CommonUtil.generateId()
+                                            if( tfc is XtcpFcc  ){
+                                                tfc.side = if(cs) FrpConfigC.W_S_S else FrpConfigC.W_S_C
+                                            }
+
+                                            if( tfc is StcpFcc ){
+                                                tfc.side = if(cs) FrpConfigC.W_S_S else FrpConfigC.W_S_C
+                                            }
+                                            doneCallBack(tfc)
+
+                                        }catch (e: Exception){
+                                            FileUtil.writeString(e.message,"C:\\Users\\xtvvvv\\Downloads\\cnm.txt",StandardCharsets.UTF_8)
                                         }
-                                        
-                                        if( tfc is StcpFcc ){
-                                            tfc.side = if(cs) FrpConfigC.W_S_S else FrpConfigC.W_S_C
-                                        }
-                                        
-                                        doneCallBack(tfc)
+                                       
                                     }else{
                                          
                                     }
