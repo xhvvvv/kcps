@@ -25,7 +25,7 @@ actual fun startFrp( frp: FrpConfigCCompose<FrpConfig> ): ExcuteCon {
                 frp.fc  ,
                 mutableMapOf<String , Any>(
                     Pair(Fc2Start.EXE_LOCATION, mainViewModel.exeFile as Any),
-                    Pair(Fc2Start.EXE_CONFIG_TYPE, ConfigTypes.valueOf(mainViewModel.confType.value?: ConfigTypes.TOML.name) as Any),
+                    Pair(Fc2Start.EXE_CONFIG_TYPE, ConfigTypes.valueOf(mainViewModel.getConfType()?: ConfigTypes.TOML.name) as Any),
                     Pair(Fc2Start.EXE_CALLBACK, ExpandExecuteResultHandler{ exitV: Int?, ex: ExecuteException? ->
                         ex?.let {
     
@@ -46,7 +46,7 @@ actual fun startFrp( frp: FrpConfigCCompose<FrpConfig> ): ExcuteCon {
                 frp.fc  ,
                 mutableMapOf<String , Any>(
                     Pair(Fc2Start.EXE_LOCATION, mainViewModel.exeSFile as Any),
-                    Pair(Fc2Start.EXE_CONFIG_TYPE, ConfigTypes.valueOf(mainViewModel.confType.value?: ConfigTypes.TOML.name) as Any),
+                    Pair(Fc2Start.EXE_CONFIG_TYPE, ConfigTypes.valueOf(mainViewModel.getConfType()?: ConfigTypes.TOML.name) as Any),
                     Pair(Fc2Start.EXE_CALLBACK, ExpandExecuteResultHandler{ exitV: Int?, ex: ExecuteException? ->
                         ex?.let {
 

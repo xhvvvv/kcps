@@ -68,9 +68,6 @@ public class TomlSTTP implements ToTypeProcessor<FrpConfigS> {
             sb.append("vhostHTTPTimeout = ").append( frp.getVhostHTTPTimeout() )  .append("\n");
         }
         
-        if (frp.getTcpmuxHTTPConnectPort()!=null){
-            sb.append("tcpmuxHTTPConnectPort = ").append( frp.getTcpmuxHTTPConnectPort() )  .append("\n") ;
-        }
         
         if (frp.getTcpmuxPassthrough()!=null){
             sb.append("tcpmuxPassthrough = ").append( frp.getTcpmuxPassthrough() )  .append("\n");

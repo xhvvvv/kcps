@@ -38,6 +38,10 @@ class SettingServiceImpl(private val maybePersisRedis: StoreDao): SettingService
         return maybePersisRedis.getString(key = SettingService.EXE_CONFIG_TYPE)
     }
 
+    override fun getFccTypeStr(): String? {
+        return maybePersisRedis.getNonFlowString(key = SettingService.EXE_CONFIG_TYPE)
+    }
+
     override fun saveFccTypes(type: String?) {
         type?.let {
             maybePersisRedis.setString(SettingService.EXE_CONFIG_TYPE, type )
@@ -45,7 +49,7 @@ class SettingServiceImpl(private val maybePersisRedis: StoreDao): SettingService
     }
 
     override suspend fun ifReadGuide(con: Boolean) {
-        maybePersisRedis.getBoolean(SettingService.EXE_CONFIG_TYPE)
+        
     }
 
     override fun getIfReadGuide(): Flow<Boolean> {
