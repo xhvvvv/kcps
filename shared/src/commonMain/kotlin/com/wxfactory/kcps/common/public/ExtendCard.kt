@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.min
 import com.wxfactory.kcps.common.core.entity.FrpConfigCCompose
 import com.wxfactory.kcps.common.platform.frpfun.startFrp
 import com.wxfactory.kcps.common.platform.frpfun.stopFrp
@@ -123,11 +124,11 @@ fun fccExtendCard(
                         ) {
                             Row(
                                 modifier = Modifier.fillMaxSize(),
-                                horizontalArrangement = Arrangement.SpaceBetween,
+                                horizontalArrangement = Arrangement.Center,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Column(
-                                    modifier = Modifier.fillMaxHeight().fillMaxWidth(0.3f),
+                                    modifier = Modifier.fillMaxHeight().width( 100.dp),
                                     horizontalAlignment = Alignment.CenterHorizontally,
                                     verticalArrangement = Arrangement.Center
                                 ) {
@@ -144,9 +145,10 @@ fun fccExtendCard(
                                     )
                                 }
 
-                                if (fc.fc is TcpFcc || fc.fc is UdpFcc) {
+                                if (fc.fc::class === TcpFcc::class ) {
+                                    fc.fc as TcpFcc
                                     Column(
-                                        modifier = Modifier.fillMaxHeight() .fillMaxWidth(0.3f),
+                                        modifier = Modifier.fillMaxHeight().width( 40.dp),
                                         verticalArrangement = Arrangement.Center
                                     ) {
                                         Icon(
@@ -155,10 +157,8 @@ fun fccExtendCard(
                                             contentDescription = "转向",
                                         )
                                     }
-                                }
-                                if (fc.fc is TcpFcc) {
                                     Column(
-                                        modifier = Modifier.fillMaxHeight() .fillMaxWidth(0.3f),
+                                        modifier = Modifier.fillMaxHeight().width( 100.dp),
                                         horizontalAlignment = Alignment.CenterHorizontally,
                                         verticalArrangement = Arrangement.Center
                                     ) {
@@ -176,9 +176,20 @@ fun fccExtendCard(
                                     }
 
                                 }
-                                if (fc.fc is UdpFcc) {
+                                if (fc.fc == UdpFcc::class) {
+                                    fc.fc as UdpFcc
                                     Column(
-                                        modifier = Modifier.fillMaxHeight() .fillMaxWidth(0.3f),
+                                        modifier = Modifier.fillMaxHeight(),
+                                        verticalArrangement = Arrangement.Center
+                                    ) {
+                                        Icon(
+                                            modifier = Modifier.fecIconSize(),
+                                            imageVector = Icons.Outlined.ArrowForward,
+                                            contentDescription = "转向",
+                                        )
+                                    }
+                                    Column(
+                                        modifier = Modifier.fillMaxHeight(),
                                         horizontalAlignment = Alignment.CenterHorizontally,
                                         verticalArrangement = Arrangement.Center
                                     ) {

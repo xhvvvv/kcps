@@ -16,6 +16,10 @@ class MessageRemind(
         onDismissRequest()
         stateChange.value = false
     }
+    val onConfirmationProxy = {
+        onConfirmation()
+        stateChange.value = false
+    }
     private fun startAlertDialog(){
         stateChange.value = stateChange.value.not()
     }
@@ -91,7 +95,7 @@ fun AlertDialogDefaults(
                 confirmButton = {
                     TextButton(
                         onClick = {
-                            thisMess.onConfirmation()
+                            thisMess.onConfirmationProxy()
                         }
                     ) {
                         Text("确认")

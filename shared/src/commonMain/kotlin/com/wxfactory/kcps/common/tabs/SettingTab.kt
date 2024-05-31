@@ -16,6 +16,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
+import com.wxfactory.kcps.common.public.LocalAlertDialog
 import com.wxfactory.kcps.common.public.Select
 import com.wxfactory.kcps.common.screen.data.ScreenViewModel
 import com.wxfactory.kcps.common.util.i18N
@@ -50,7 +51,7 @@ private fun settingPanel(
 ) {
     var frpcLocation:String by remember{ mutableStateOf(mainViewModel.exeFile?:"") }
     var frpsLocation:String by remember{ mutableStateOf(mainViewModel.exeSFile?:"") }
-    
+    val localAlertDialog = LocalAlertDialog.current
     Scaffold(
         bottomBar = {
             Row(
@@ -60,6 +61,7 @@ private fun settingPanel(
                 Button(onClick ={
                     mainViewModel.setExeLocation(frpcLocation)
                     mainViewModel.setExeSLocation(frpsLocation)
+                    localAlertDialog.alert("保存成功！")
                 }){
                     Text("确定保存")
                 }
@@ -72,7 +74,7 @@ private fun settingPanel(
         ) {
             txb("frpc执行文件位置"){
                 OutlinedTextField(
-                    modifier = Modifier.fillMaxWidth(0.7f).scale(0.5f),
+                    modifier = Modifier.fillMaxWidth(0.7f),
                     value = frpcLocation,
                     onValueChange = {
                         frpcLocation = it
