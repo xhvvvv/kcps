@@ -14,4 +14,4 @@ rootProject.name = "frpClient"
 include("shared")
 include("desktop")
 include("frpfun")
-include("preview")
+//include("preview")

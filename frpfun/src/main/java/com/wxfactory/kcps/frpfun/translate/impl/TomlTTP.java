@@ -89,7 +89,7 @@ public class TomlTTP implements ToTypeProcessor<FrpConfigC> {
                  sb.append("[[visitors]]").append("\n");
                  sb.append( "bindAddr = "       )       .append("\"")       .append( vvvv.getLocalIP())     .append("\"\n");
                  sb.append( "bindPort = "     )         .append("  ")       .append( vvvv.getLocalPort())   .append("  \n");
-                 sb.append(" keepTunnelOpen = " )        .append("\"")           .append( vvvv .getKeepTunnelOpen())     .append("\"\n") ;
+                 sb.append(" keepTunnelOpen = " )            .append( vvvv .getKeepTunnelOpen())     .append("\n") ;
                  sb.append(" serverName = "     )        .append("\"")           .append( vvvv .getServerName())         .append("\"\n") ;
                  
              }else{
