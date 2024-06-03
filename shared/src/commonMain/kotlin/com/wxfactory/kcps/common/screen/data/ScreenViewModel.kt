@@ -7,6 +7,7 @@ import cn.hutool.core.util.SerializeUtil
 import com.wxfactory.kcps.common.core.repository.FccService
 import com.wxfactory.kcps.common.core.repository.FcsService
 import com.wxfactory.kcps.common.core.repository.SettingService
+import com.wxfactory.kcps.frpfun.entity.ConfigTypes
 import com.wxfactory.kcps.frpfun.entity.FrpConfigC
 import com.wxfactory.kcps.frpfun.entity.FrpConfigS
 import kotlinx.coroutines.flow.*
@@ -50,7 +51,11 @@ class ScreenViewModel(
         initialValue = null,
     )
     fun getConfType( ): String? {
-        return settingsRepository.getFccTypeStr()
+        var fts = settingsRepository.getFccTypeStr()
+        if (fts == null || fts == "") {
+            return ConfigTypes.TOML.name
+        }
+        return fts
     }
 
     fun setConfType( type : String) {

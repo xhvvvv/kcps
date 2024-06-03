@@ -38,20 +38,23 @@ fun main() = application {
         )
     }.koin
     val icon = painterResource("icon.svg")
+    val state = rememberWindowState(
+        position = WindowPosition.Aligned(Alignment.Center),
+        width = 1100.dp,
+        height = 700.dp,
+    )
     Tray(
         icon = icon,
         menu = {
+            Item("最小化", onClick = {state.isMinimized = true} )
             Item("关闭连接并退出", onClick = ::exitApplication)
         }
+        
     )
     Window(
-        onCloseRequest = { exitApplication() },
+        onCloseRequest = { state.isMinimized = true },
         title = "kcps",
-        state = rememberWindowState(
-            position = WindowPosition.Aligned(Alignment.Center),
-            width = 1100.dp,
-            height = 700.dp,
-        ),
+        state = state,
         icon = icon
     ) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
